@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Histórico de Candidaturas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- 1. RESET E LAYOUT (Igual às outras páginas) --- */
+    :root {
+      --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
+      --text-dark: #333; --text-medium: #555; --bg-gray-light: #f8f9fa;
+    }
+
+    body { background-color: var(--bg-gray-light) !important; margin: 0 !important; font-family: 'Poppins', sans-serif; }
+    .main-header { display: none !important; }
+
+    .container.main-container {
+        max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
+        background: transparent !important; box-shadow: none !important; display: block !important;
+    }
+
+    /* --- 2. HEADER CUSTOMIZADO (Igual ao Feed Estudante) --- */
+    .custom-header {
+      background: var(--primary-blue); color: white; padding: 10px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
+    }
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+    
+    .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
+    .nav-links a {
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
+
+    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
+    .user-menu-container { position: relative; }
+
+    .user-trigger {
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+        padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+    }
+    .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+    .nav-profile-pic {
+        width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+        border: 2px solid white; background-color: #fff;
+    }
+    
+    .user-dropdown {
+        position: absolute; top: 120%; right: 0;
+        background: white; width: 200px; border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: none;
+        flex-direction: column; overflow: hidden; z-index: 1001; animation: fadeIn 0.2s ease;
+    }
+    .user-dropdown.show { display: flex; }
+
+    .user-dropdown a {
+        padding: 12px 20px; text-decoration: none; color: var(--text-dark);
+        font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+    }
+    .user-dropdown a:hover { background-color: var(--light-blue); color: var(--primary-blue); }
+    .user-dropdown a i { width: 18px; text-align: center; }
+    
+    .divider { height: 1px; background-color: #eee; margin: 0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- 3. CONTEÚDO DO HISTÓRICO --- */
+    .history-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: var(--primary-blue); margin-bottom: 30px; font-weight: 700; }
+
+    .history-card {
+        background: white; border-radius: 12px; padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
+        display: flex; justify-content: space-between; align-items: center;
+        flex-wrap: wrap; gap: 20px; transition: transform 0.2s;
+    }
+    .history-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+
+    .vaga-info h3 { margin: 0 0 8px 0; color: var(--primary-blue); font-size: 20px; }
+    .vaga-info p { margin: 0 0 5px 0; color: var(--text-medium); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+    .vaga-info i { color: var(--primary-blue); width: 20px; text-align: center; }
+    
+    /* Badges */
+    .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; }
+    .st-ativa { background: #e6ffed; color: #28a745; }
+    .st-analise { background: #fff3cd; color: #856404; }
+    .st-finalizada { background: #f8d7da; color: #721c24; }
+
+    /* Botão Ver Vaga */
+    .btn-view {
+        background-color: var(--primary-blue); color: white; padding: 10px 25px;
+        border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 14px;
+        transition: 0.3s; display: inline-block;
+    }
+    .btn-view:hover { background-color: var(--dark-blue); }
+
+    @media (max-width: 768px) {
+        .custom-header { flex-direction: column; gap: 15px; }
+        .nav-links { margin: 0; }
+        .user-menu-container { margin-top: 5px; }
+        .history-card { flex-direction: column; align-items: flex-start; }
+        .history-card > div { width: 100%; }
+        .history-card > div:last-child { text-align: left; margin-top: 10px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  
+  <div class="nav-links">
+    <a href="{% url 'feed_vagas' %}">Feed de Vagas</a>
+    <a href="{% url 'historico_candidaturas' %}" style="text-decoration: underline;">Minhas Candidaturas</a>
+  </div>
+
+  <div class="user-menu-container">
+      <div class="user-trigger" onclick="toggleUserMenu()">
+          {% if user.perfil_estudante.foto %}
+              <img src="{{ user.perfil_estudante.foto.url }}" alt="Foto" class="nav-profile-pic">
+          {% else %}
+              <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                  <i class="fas fa-user"></i>
+              </div>
+          {% endif %}
+          
+          <span>Olá, {{ user.first_name|default:user.username }}</span>
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div class="user-dropdown" id="userDropdown">
+          <a href="{% url 'perfil_estudante' %}"><i class="fas fa-user-circle"></i> Ver Perfil</a>
+          <div class="divider"></div>
+          <a href="{% url 'logout' %}" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+  </div>
+</header>
+
+<main class="history-container">
+    <h1>Minhas Candidaturas</h1>
+
+    {% for cand in candidaturas %}
+        <div class="history-card">
+            <div class="vaga-info">
+                <h3>{{ cand.vaga.titulo }}</h3>
+                <p><i class="fas fa-building"></i> {{ cand.vaga.empresa.nome_empresa }}</p>
+                <p><i class="fas fa-calendar-check"></i> Candidatou-se em: {{ cand.data_candidatura|date:"d/m/Y" }}</p>
+            </div>
+            
+            <div style="text-align: right; min-width: 150px;">
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; color: #999; margin-bottom: 5px;">Status da Vaga:</div>
+                    {% if cand.vaga.status == 'ativa' %}
+                        <span class="status-badge st-ativa">Em Aberto</span>
+                    {% elif cand.vaga.status == 'analise' %}
+                        <span class="status-badge st-analise">Em Análise</span>
+                    {% else %}
+                        <span class="status-badge st-finalizada">Finalizada</span>
+                    {% endif %}
+                </div>
+                <a href="{% url 'detalhe_vaga' cand.vaga.id %}" class="btn-view">Ver Detalhes</a>
+            </div>
+        </div>
+    {% empty %}
+        <div style="text-align: center; padding: 60px;">
+            <i class="fas fa-history" style="font-size: 50px; color: #ccc; margin-bottom: 20px;"></i>
+            <p style="font-size: 18px; color: #666;">Você ainda não se candidatou a nenhuma vaga.</p>
+            <a href="{% url 'feed_vagas' %}" class="btn-view" style="margin-top: 15px;">Procurar Vagas</a>
+        </div>
+    {% endfor %}
+</main>
+
+<script>
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.user-menu-container')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+</script>
+{% endblock %}

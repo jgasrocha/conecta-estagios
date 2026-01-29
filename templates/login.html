@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- CSS do Layout Novo --- */
+    :root {
+      --primary-blue: #007bff;
+      --light-blue: #e7f3ff;
+      --dark-blue: #0056b3;
+      --text-dark: #333;
+      --text-medium: #555;
+      --text-light: #777;
+      --border-light: #e0e0e0;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --shadow-hover: rgba(0, 0, 0, 0.12);
+    }
+
+    body {
+      background-color: var(--light-blue) !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-image: url('https://alcancejr.com.br/wp-content/uploads/2020/03/mesa-1024x683.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+
+    .main-header { display: none !important; }
+    
+    .container.main-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* --- Card de Login --- */
+    .login-card {
+      background: #fff;
+      padding: 40px 50px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px var(--shadow-light);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px var(--shadow-hover);
+    }
+
+    h2 {
+      margin-bottom: 30px;
+      color: var(--primary-blue);
+      font-weight: 700;
+      font-size: 32px;
+    }
+
+    form p { margin: 0; }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--text-medium);
+      text-align: left;
+      font-size: 15px;
+      margin-top: 15px;
+    }
+
+    /* --- ESTILO DOS INPUTS (SEM A SETINHA) --- */
+    input[type="text"], input[type="password"], input[type="email"] {
+      width: 100%; 
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
+      background-color: #fcfcfc;
+      font-size: 15px;
+      color: var(--text-dark);
+      transition: border-color 0.3s, box-shadow 0.3s;
+      box-sizing: border-box; /* Importante para o padding não estourar */
+    }
+
+    input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      outline: none;
+    }
+
+    /* --- WRAPPER DA SENHA (Para o ícone do olho) --- */
+    .password-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    /* O input de senha precisa de espaço na direita para o ícone não ficar em cima do texto */
+    .password-container input {
+        padding-right: 40px; 
+    }
+
+    .toggle-password-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        cursor: pointer;
+        z-index: 10;
+        transition: color 0.3s;
+    }
+    .toggle-password-icon:hover {
+        color: var(--primary-blue);
+    }
+
+    /* Botão */
+    .btn-login {
+      width: 100%;
+      background: var(--primary-blue);
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 25px;
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    .btn-login:hover {
+      background: var(--dark-blue);
+      transform: translateY(-2px);
+    }
+
+    .link-forgot { margin-top: 20px; font-size: 15px; }
+    .link-forgot a { color: var(--primary-blue); text-decoration: none; font-weight: 500; }
+    .link-forgot a:hover { text-decoration: underline; color: var(--dark-blue); }
+    
+    .footer-text {
+      margin-top: 30px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+    
+    .errorlist { color: red; list-style: none; padding: 0; text-align: left; font-size: 14px; margin-bottom: 10px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-card">
+    <h2>Bem-vindo(a)!</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+            <div class="errorlist">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div>
+            <label for="{{ form.username.id_for_label }}">Usuário:</label>
+            {{ form.username }} 
+            {% if form.username.errors %}
+                <div class="errorlist">{{ form.username.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div>
+            <label for="{{ form.password.id_for_label }}">Senha:</label>
+            
+            <div class="password-container">
+                {{ form.password }}
+                <i class="fas fa-eye toggle-password-icon" id="togglePassword"></i>
+            </div>
+
+            {% if form.password.errors %}
+                <div class="errorlist">{{ form.password.errors }}</div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn-login">Entrar</button>
+    </form>
+
+    <p class="link-forgot">
+        Não tem conta? <a href="{% url 'cadastro_escolha' %}">Cadastre-se aqui</a>
+    </p>
+
+    <p class="footer-text">Conecta Estágio - Sua ponte para o futuro profissional.</p>
+</div>
+
+<script>
+    // Script para mostrar/esconder a senha
+    const togglePassword = document.querySelector('#togglePassword');
+    const passwordInput = document.querySelector('#id_password'); // O Django gera id_password por padrão
+
+    togglePassword.addEventListener('click', function (e) {
+        // Alterna o atributo type
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        // Alterna o ícone (olho aberto / fechado)
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+{% endblock %}

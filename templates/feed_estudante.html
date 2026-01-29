@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Vagas Disponíveis - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- CONFIGURAÇÃO DO LAYOUT --- */
+    :root {
+      --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
+      --text-dark: #333; --text-medium: #555; --border-light: #e0e0e0;
+      --shadow-light: rgba(0, 0, 0, 0.08); --bg-gray-light: #f8f9fa;
+    }
+
+    .container.main-container {
+        max-width: 100% !important; width: 100% !important; padding: 0 !important;
+        margin: 0 !important; background: transparent !important; box-shadow: none !important;
+        display: block !important;
+    }
+    .main-header { display: none !important; }
+    body { background-color: var(--bg-gray-light) !important; margin: 0 !important; font-family: 'Poppins', sans-serif; }
+
+    /* --- HEADER CUSTOMIZADO --- */
+    .custom-header {
+      background: var(--primary-blue); color: white; padding: 10px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
+    }
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+    
+    .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
+    .nav-links a {
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
+
+    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
+    .user-menu-container { position: relative; }
+
+    .user-trigger {
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+        padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+    }
+    .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+    .nav-profile-pic {
+        width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+        border: 2px solid white; background-color: #fff;
+    }
+    
+    .user-dropdown {
+        position: absolute; top: 120%; right: 0;
+        background: white; width: 200px; border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: none;
+        flex-direction: column; overflow: hidden; z-index: 1001; animation: fadeIn 0.2s ease;
+    }
+    .user-dropdown.show { display: flex; }
+
+    .user-dropdown a {
+        padding: 12px 20px; text-decoration: none; color: var(--text-dark);
+        font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+    }
+    .user-dropdown a:hover { background-color: var(--light-blue); color: var(--primary-blue); }
+    .user-dropdown a i { width: 18px; text-align: center; }
+    
+    .divider { height: 1px; background-color: #eee; margin: 0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- FEED CONTENT --- */
+    .feed-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: var(--primary-blue); font-weight: 700; text-align: center; margin-bottom: 30px; }
+
+    /* Search Box */
+    .search-box { display: flex; gap: 10px; margin-bottom: 40px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-light); }
+    .search-box input { flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 16px; font-family: 'Poppins', sans-serif; }
+    .search-box button { width: auto; padding: 0 30px; background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+    .search-box button:hover { background-color: var(--dark-blue); }
+
+    /* Cards */
+    .job-listings { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+    .job-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 20px var(--shadow-light); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+    .job-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
+    .job-card h3 { color: var(--primary-blue); margin: 0 0 10px 0; font-size: 20px; }
+    .job-info { color: var(--text-medium); font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .job-info i { color: var(--primary-blue); width: 16px; }
+    .job-salary { font-weight: 600; color: #28a745; margin-top: 10px; }
+    .btn-details { display: block; width: 100%; text-align: center; background-color: var(--primary-blue); color: white; padding: 10px; border-radius: 25px; text-decoration: none; font-weight: 600; margin-top: 20px; transition: 0.3s; }
+    .btn-details:hover { background-color: var(--dark-blue); }
+    
+    .empty-state { text-align: center; padding: 50px; color: #777; grid-column: 1 / -1; }
+
+    @media (max-width: 768px) {
+        .custom-header { flex-direction: column; gap: 15px; }
+        .nav-links { margin: 0; }
+        .user-menu-container { margin-top: 5px; }
+        .search-box { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  
+  <div class="nav-links">
+    <a href="{% url 'feed_vagas' %}" style="text-decoration: underline;">Feed de Vagas</a>
+    <a href="{% url 'historico_candidaturas' %}">Minhas Candidaturas</a>
+  </div>
+
+  <div class="user-menu-container">
+      <div class="user-trigger" onclick="toggleUserMenu()">
+          {% if user.perfil_estudante.foto %}
+              <img src="{{ user.perfil_estudante.foto.url }}" alt="Foto" class="nav-profile-pic">
+          {% else %}
+              <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                  <i class="fas fa-user"></i>
+              </div>
+          {% endif %}
+          
+          <span>Olá, {{ user.first_name|default:user.username }}</span>
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div class="user-dropdown" id="userDropdown">
+          <a href="{% url 'perfil_estudante' %}"><i class="fas fa-user-circle"></i> Ver Perfil</a>
+          <div class="divider"></div>
+          <a href="{% url 'logout' %}" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+  </div>
+</header>
+
+<main class="feed-container">
+  <h1>Oportunidades Recentes</h1>
+  
+  <form method="get" class="search-box">
+      <input type="text" name="q" placeholder="Buscar por cargo, empresa, cidade ou área..." value="{{ request.GET.q|default:'' }}">
+      <button type="submit"><i class="fas fa-search"></i> Buscar</button>
+  </form>
+
+  <section class="job-listings">
+      {% for vaga in vagas %}
+          <div class="job-card">
+              <div>
+                  <h3>{{ vaga.titulo }}</h3>
+                  <div class="job-info">
+                      <i class="fas fa-building"></i> {{ vaga.empresa.nome_empresa }}
+                  </div>
+                  <div class="job-info">
+                      <i class="fas fa-map-marker-alt"></i> 
+                      {% if vaga.modalidade == 'remoto' %}
+                        Remoto
+                      {% else %}
+                        {{ vaga.localizacao }}
+                      {% endif %}
+                      ({{ vaga.get_modalidade_display }})
+                  </div>
+                  <div class="job-info job-salary">
+                      <i class="fas fa-money-bill-wave"></i> R$ {{ vaga.salario|default:"A combinar" }}
+                  </div>
+                  <div class="job-info" style="font-size: 12px; margin-top: 5px;">
+                      <i class="fas fa-clock"></i> Publicada em {{ vaga.data_publicacao|date:"d/m/Y" }}
+                  </div>
+              </div>
+              
+              <a href="{% url 'detalhe_vaga' vaga.id %}" class="btn-details">
+                  Ver Detalhes
+              </a>
+          </div>
+      {% empty %}
+          <div class="empty-state">
+              <i class="fas fa-search" style="font-size: 40px; margin-bottom: 15px; color: #ccc;"></i>
+              <p>Nenhuma vaga encontrada {% if request.GET.q %}para "<strong>{{ request.GET.q }}</strong>"{% endif %}.</p>
+              {% if request.GET.q %}
+                  <a href="{% url 'feed_vagas' %}" style="color: var(--primary-blue); font-weight: bold; text-decoration: none;">Limpar Pesquisa</a>
+              {% else %}
+                  <p>Tente ajustar sua busca ou volte mais tarde.</p>
+              {% endif %}
+          </div>
+      {% endfor %}
+  </section>
+</main>
+
+<script>
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.user-menu-container')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+</script>
+{% endblock %}

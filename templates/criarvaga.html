@@ -1,0 +1,531 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+
+{% block title %}Nova Vaga - Conecta Estágio{% endblock %}
+
+
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
+
+<style>
+
+    /* --- CONFIGURAÇÃO DO LAYOUT --- */
+
+    :root {
+
+      --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
+
+      --text-dark: #333; --text-medium: #555; --border-light: #e0e0e0;
+
+      --shadow-light: rgba(0, 0, 0, 0.08); --bg-gray-light: #f8f9fa;
+
+    }
+
+
+
+    body { background-color: var(--bg-gray-light) !important; margin: 0 !important; font-family: 'Poppins', sans-serif; }
+
+    .main-header { display: none !important; }
+
+
+
+    /* Reset Container */
+
+    .container.main-container {
+
+        max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
+
+        background: transparent !important; box-shadow: none !important; display: block !important;
+
+    }
+
+
+
+    /* --- HEADER CUSTOMIZADO (Igual ao Feed Empresa) --- */
+
+    .custom-header {
+
+      background: var(--primary-blue); color: white; padding: 10px 30px;
+
+      display: flex; justify-content: space-between; align-items: center;
+
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
+
+    }
+
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+
+   
+
+    /* Nav Links */
+
+    .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
+
+    .nav-links a {
+
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: 0.3s;
+
+    }
+
+    .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
+
+
+
+    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
+
+    .user-menu-container { position: relative; }
+
+
+
+    .user-trigger {
+
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+
+        padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+
+    }
+
+    .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+
+
+    .nav-profile-pic {
+
+        width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+
+        border: 2px solid white; background-color: #fff;
+
+    }
+
+   
+
+    .user-dropdown {
+
+        position: absolute; top: 120%; right: 0;
+
+        background: white; width: 220px; border-radius: 10px;
+
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: none;
+
+        flex-direction: column; overflow: hidden; z-index: 1001; animation: fadeIn 0.2s ease;
+
+    }
+
+    .user-dropdown.show { display: flex; }
+
+
+
+    .user-dropdown a {
+
+        padding: 12px 20px; text-decoration: none; color: var(--text-dark);
+
+        font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+
+    }
+
+    .user-dropdown a:hover { background-color: var(--light-blue); color: var(--primary-blue); }
+
+    .user-dropdown a i { width: 18px; text-align: center; }
+
+   
+
+    .divider { height: 1px; background-color: #eee; margin: 0; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+
+    /* --- MAIN CONTAINER (FORMULÁRIO) --- */
+
+    .create-vacancy-container {
+
+      max-width: 800px; margin: 40px auto; padding: 40px;
+
+      background-color: #fff; border-radius: 12px;
+
+      box-shadow: 0 10px 30px var(--shadow-light);
+
+    }
+
+
+
+    h1 {
+
+      color: var(--primary-blue); font-weight: 700; font-size: 32px;
+
+      margin-bottom: 25px; text-align: center;
+
+    }
+
+
+
+    .form-group { margin-bottom: 20px; }
+
+    label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-dark); font-size: 16px; }
+
+
+
+    input[type="text"], input[type="number"], input[type="date"], textarea, select {
+
+      width: 100%; padding: 12px; border: 1px solid var(--border-light);
+
+      border-radius: 8px; font-size: 15px; color: var(--text-dark);
+
+      background-color: #fcfcfc; box-sizing: border-box; transition: 0.3s;
+
+    }
+
+    input:focus, textarea:focus, select:focus {
+
+      border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); outline: none;
+
+    }
+
+    textarea { resize: vertical; min-height: 100px; }
+
+
+
+    button[type="submit"] {
+
+      width: 100%; background: var(--primary-blue); color: white; border: none;
+
+      padding: 14px; font-size: 17px; font-weight: 600; border-radius: 25px;
+
+      cursor: pointer; transition: 0.3s; margin-top: 20px;
+
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+
+    }
+
+    button[type="submit"]:hover { background: var(--dark-blue); transform: translateY(-2px); }
+
+
+
+    .button-group { display: flex; gap: 15px; margin-top: 25px; }
+
+    .btn-cancel {
+
+      background-color: #6c757d; color: white; border: none; padding: 14px;
+
+      font-size: 17px; font-weight: 600; border-radius: 25px; cursor: pointer;
+
+      text-align: center; text-decoration: none; width: 100%; display: inline-block; transition: 0.3s;
+
+    }
+
+    .btn-cancel:hover { background-color: #5a6268; }
+
+
+
+    @media (max-width: 768px) {
+
+        .button-group { flex-direction: column; }
+
+        .custom-header { flex-direction: column; gap: 10px; }
+
+        .nav-links { margin: 0; }
+
+        .user-menu-container { margin-top: 5px; }
+
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<header class="custom-header">
+
+  <div class="logo">Conecta Estágio</div>
+
+ 
+
+  <div class="nav-links">
+
+    <a href="{% url 'feed_empresa' %}">Minhas Vagas</a>
+
+  </div>
+
+
+
+  <div class="user-menu-container">
+
+      <div class="user-trigger" onclick="toggleUserMenu()">
+
+          {% if user.perfil_empresa.logo %}
+
+              <img src="{{ user.perfil_empresa.logo.url }}" alt="Logo" class="nav-profile-pic">
+
+          {% else %}
+
+              <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+
+                  <i class="fas fa-building"></i>
+
+              </div>
+
+          {% endif %}
+
+         
+
+          <span>Olá, {{ user.perfil_empresa.nome_empresa|default:user.username }}</span>
+
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+
+      </div>
+
+
+
+      <div class="user-dropdown" id="userDropdown">
+
+          <a href="{% url 'perfil_empresa' %}">
+
+              <i class="fas fa-building"></i> Ver Perfil
+
+          </a>
+
+          <div class="divider"></div>
+
+          <a href="{% url 'logout' %}" style="color: #dc3545;">
+
+              <i class="fas fa-sign-out-alt"></i> Sair
+
+          </a>
+
+      </div>
+
+  </div>
+
+</header>
+
+
+
+<main>
+
+    <div class="create-vacancy-container">
+
+      <h1>Publicar Nova Vaga</h1>
+
+     
+
+      <form method="post" id="createVacancyForm">
+
+        {% csrf_token %}
+
+       
+
+        <div class="form-group">
+
+          <label>Título da Vaga:</label>
+
+          {{ form.titulo }}
+
+          {{ form.titulo.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Área/Curso:</label>
+
+          {{ form.area }}
+
+          {{ form.area.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Descrição da Vaga:</label>
+
+          {{ form.descricao }}
+
+          {{ form.descricao.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Requisitos:</label>
+
+          {{ form.requisitos }}
+
+          {{ form.requisitos.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Benefícios:</label>
+
+          {{ form.beneficios }}
+
+          {{ form.beneficios.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Modalidade:</label>
+
+          {{ form.modalidade }}
+
+          {{ form.modalidade.errors }}
+
+        </div>
+
+
+
+        <div class="form-group" id="locationField">
+
+          <label>Localização (Cidade, Estado):</label>
+
+          {{ form.localizacao }}
+
+          {{ form.localizacao.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Bolsa Auxílio (R$):</label>
+
+          {{ form.salario }}
+
+          {{ form.salario.errors }}
+
+        </div>
+
+
+
+        <div class="form-group">
+
+          <label>Prazo para Candidatura:</label>
+
+          {{ form.prazo_candidatura }}
+
+          {{ form.prazo_candidatura.errors }}
+
+        </div>
+
+       
+
+        <div class="button-group">
+
+          <button type="submit">Publicar Vaga</button>
+
+          <a href="{% url 'feed_empresa' %}" class="btn-cancel">Cancelar</a>
+
+        </div>
+
+      </form>
+
+    </div>
+
+</main>
+
+
+
+<script>
+
+  // 1. Script do Menu Dropdown
+
+  function toggleUserMenu() {
+
+      const dropdown = document.getElementById('userDropdown');
+
+      dropdown.classList.toggle('show');
+
+  }
+
+
+
+  window.onclick = function(event) {
+
+      if (!event.target.closest('.user-menu-container')) {
+
+          const dropdown = document.getElementById('userDropdown');
+
+          if (dropdown.classList.contains('show')) {
+
+              dropdown.classList.remove('show');
+
+          }
+
+      }
+
+  }
+
+
+
+  // 2. Lógica para esconder/mostrar campo de localização
+
+  const modalidadeSelect = document.getElementById('id_modalidade');
+
+  const locationField = document.getElementById('locationField');
+
+  const locationInput = document.getElementById('id_localizacao');
+
+
+
+  function toggleLocationField() {
+
+    if (!modalidadeSelect) return;
+
+
+
+    if (modalidadeSelect.value === 'remoto') {
+
+      locationField.style.display = 'none';
+
+      if(locationInput) {
+
+          locationInput.value = '';
+
+          locationInput.removeAttribute('required');
+
+      }
+
+    } else {
+
+      locationField.style.display = 'block';
+
+    }
+
+  }
+
+
+
+  if (modalidadeSelect) {
+
+      modalidadeSelect.addEventListener('change', toggleLocationField);
+
+      toggleLocationField();
+
+  }
+
+</script>
+
+{% endblock %}

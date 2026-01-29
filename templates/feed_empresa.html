@@ -1,0 +1,361 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block title %}Painel da Empresa - Conecta Estágio{% endblock %} 
+
+{% block extra_css %}
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+
+<style>
+  /* --- CONFIGURAÇÃO DO LAYOUT --- */
+  :root {
+    --primary-blue: #007bff;
+    --light-blue: #e7f3ff;
+    --dark-blue: #0056b3;
+    --text-dark: #333;
+    --text-medium: #555;
+    --text-light: #777;
+    --border-light: #e0e0e0;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --bg-gray-light: #f8f9fa;
+  }
+
+  .container.main-container {
+    max-width: 100% !important; width: 100% !important; padding: 0 !important;
+    margin: 0 !important; background: transparent !important; box-shadow: none !important;
+    display: block !important;
+  }
+
+  .main-header { display: none !important; }
+
+  body {
+    background-color: var(--bg-gray-light) !important;
+    margin: 0 !important;
+    font-family: "Poppins", sans-serif;
+  }
+
+  /* --- HEADER CUSTOMIZADO (FIXO) --- */
+  .custom-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky; top: 0; z-index: 1000; width: 100%; box-sizing: border-box;
+  }
+  .custom-header .logo { font-size: 24px; font-weight: 700; }
+  
+  .nav-links { 
+      margin-left: auto; margin-right: 30px; display: flex; align-items: center;
+  }
+  .nav-links a {
+    color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: color 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
+
+  /* --- MENU DO USUÁRIO --- */
+  .user-menu-container { position: relative; }
+
+  .user-trigger {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+  }
+  .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+  .nav-profile-pic {
+      width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+      border: 2px solid white; background-color: #fff;
+  }
+  
+  .user-dropdown {
+      position: absolute; top: 120%; right: 0;
+      background: white; width: 220px;
+      border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+      display: none; flex-direction: column; overflow: hidden;
+      z-index: 1001; animation: fadeIn 0.2s ease;
+  }
+  .user-dropdown.show { display: flex; }
+
+  .user-dropdown a {
+      padding: 12px 20px; text-decoration: none; color: var(--text-dark);
+      font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+  }
+  .user-dropdown a:hover { background-color: var(--light-blue); color: var(--primary-blue); }
+  .user-dropdown a i { width: 18px; text-align: center; }
+  
+  .divider { height: 1px; background-color: #eee; margin: 0; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* --- CONTEÚDO PRINCIPAL --- */
+  .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+  h1 { color: var(--primary-blue); font-weight: 700; font-size: 32px; margin-bottom: 5px; }
+  .welcome { margin-bottom: 30px; font-size: 16px; color: var(--text-medium); }
+
+  /* --- BARRA DE FERRAMENTAS --- */
+  .tools-section {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 30px; flex-wrap: wrap; gap: 15px;
+  }
+
+  /* --- SEARCH BOX (Estilo do Estudante) --- */
+  .search-box {
+    display: flex; gap: 10px; background: white; padding: 20px;
+    border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-light);
+    flex-grow: 1; max-width: 600px;
+  }
+
+  .search-box input {
+    flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-light);
+    font-size: 16px; font-family: 'Poppins', sans-serif; outline: none;
+  }
+  .search-box input:focus {
+      border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  }
+
+  .search-box button {
+    width: auto; padding: 0 30px; background-color: var(--primary-blue);
+    color: white; border: none; border-radius: 8px; font-weight: 600;
+    cursor: pointer; transition: background 0.3s; font-size: 16px;
+  }
+  .search-box button:hover { background-color: var(--dark-blue); }
+
+  /* Filtros ao lado da barra */
+  .filters { display: flex; align-items: center; }
+  .filters select {
+    padding: 12px 20px; border: 1px solid var(--border-light); border-radius: 12px;
+    background-color: #fff; font-size: 16px; color: var(--text-dark); cursor: pointer;
+    box-shadow: 0 5px 15px var(--shadow-light); outline: none;
+  }
+
+  /* --- CARDS DE VAGAS --- */
+  .job-listings { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+
+  .job-card {
+    background-color: #fff; border-radius: 12px; box-shadow: 0 5px 20px var(--shadow-light);
+    padding: 25px; transition: 0.3s ease; display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .job-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12); }
+
+  .job-card h3 { color: var(--primary-blue); font-size: 20px; margin-top: 0; margin-bottom: 10px; font-weight: 600; }
+  .job-card p { color: var(--text-medium); font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .job-card p i { width: 16px; color: var(--primary-blue); }
+
+  /* Badges */
+  .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 10px; align-self: flex-start; }
+  .status-badge.active { background-color: #e6ffed; color: #28a745; }
+  .status-badge.inactive { background-color: #fff3cd; color: #856404; }
+  .status-badge.closed { background-color: #f8d7da; color: #721c24; }
+
+  /* Ações */
+  .card-actions { margin-top: 20px; display: flex; gap: 10px; }
+  .btn-card { padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 500; flex: 1; text-align: center; transition: 0.3s; }
+  .btn-primary-card { background-color: var(--primary-blue); color: white; }
+  .btn-primary-card:hover { background-color: var(--dark-blue); }
+  .btn-secondary-card { background-color: #f0f0f0; color: var(--text-dark); border: 1px solid var(--border-light); }
+  .btn-secondary-card:hover { background-color: #e0e0e0; }
+
+  .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 5px 20px var(--shadow-light); display: none; }
+
+  /* FAB */
+  .fab-button {
+    position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+    background-color: var(--primary-blue); color: white; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 24px; box-shadow: 0 5px 20px rgba(0, 123, 255, 0.4);
+    text-decoration: none; transition: 0.3s; z-index: 999;
+  }
+  .fab-button:hover { transform: scale(1.1); background-color: var(--dark-blue); }
+
+  @media (max-width: 768px) {
+    .custom-header { flex-direction: column; gap: 15px; }
+    .nav-links { margin: 0; }
+    .user-menu-container { margin-top: 5px; }
+    .tools-section { flex-direction: column; align-items: stretch; }
+    .search-box { width: 100%; max-width: 100%; flex-direction: column; }
+    .search-box button { width: 100%; }
+    .filters { width: 100%; margin-top: 10px; }
+    .filters select { width: 100%; }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  
+  <div class="nav-links">
+    <a href="{% url 'feed_empresa' %}" style="text-decoration: underline">Minhas Vagas</a>
+  </div>
+
+  <div class="user-menu-container">
+      <div class="user-trigger" onclick="toggleUserMenu()">
+          {% if user.perfil_empresa.logo %}
+              <img src="{{ user.perfil_empresa.logo.url }}" alt="Logo" class="nav-profile-pic">
+          {% else %}
+              <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                  <i class="fas fa-building"></i>
+              </div>
+          {% endif %}
+          
+          <span>Olá, {{ user.perfil_empresa.nome_empresa|default:user.username }}</span>
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div class="user-dropdown" id="userDropdown">
+          <a href="{% url 'perfil_empresa' %}"><i class="fas fa-building"></i> Ver Perfil</a>
+          <div class="divider"></div>
+          <a href="{% url 'logout' %}" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+  </div>
+</header>
+
+<main class="dashboard-container">
+  <h1>Suas Vagas Publicadas</h1>
+  <p class="welcome">
+    Gerencie suas oportunidades de estágio e acompanhe os candidatos.
+  </p>
+
+  <section class="tools-section">
+    <form method="get" class="search-box">
+        <input
+            type="text"
+            name="q"
+            placeholder="Buscar vagas por título..."
+            value="{{ request.GET.q|default:'' }}"
+        />
+        <button type="submit"><i class="fas fa-search"></i> Buscar</button>
+    </form>
+    
+    <div class="filters">
+      <select id="filterStatus">
+        <option value="all">Todas as Vagas</option>
+        <option value="ativa">Ativas</option>
+        <option value="analise">Em Análise</option>
+        <option value="finalizada">Fechadas</option>
+      </select>
+    </div>
+  </section>
+
+  <section class="job-listings">
+    {% for vaga in vagas %}
+    
+    <div
+      class="job-card"
+      data-title="{{ vaga.titulo|lower }}"
+      data-status="{{ vaga.status }}"
+    >
+      <div>
+        <h3>{{ vaga.titulo }}</h3>
+
+        <p><i class="fas fa-users"></i> <strong>Candidatos:</strong> {{ vaga.candidaturas.count }} inscritos</p>
+        <p><i class="fas fa-graduation-cap"></i> {{ vaga.get_area_display|default:vaga.area }}</p>
+        <p><i class="fas fa-calendar-alt"></i> Pub: {{ vaga.data_publicacao|date:"d/m/Y" }}</p>
+
+        {% if vaga.status == 'ativa' %}
+            <span class="status-badge active">Ativa (Recebendo CVs)</span>
+        {% elif vaga.status == 'analise' %}
+            <span class="status-badge inactive" style="background-color: #fff3cd; color: #856404">Em Análise</span>
+        {% else %}
+            <span class="status-badge closed">Finalizada</span>
+        {% endif %}
+      </div>
+
+      <div class="card-actions" style="flex-direction: column; gap: 10px">
+        <a href="{% url 'detalhe_vaga' vaga.id %}" class="btn-card btn-primary-card">Ver Detalhes</a>
+
+        <div style="display: flex; gap: 5px">
+          {% if vaga.status == 'ativa' %}
+          <a href="{% url 'mudar_status_vaga' vaga.id 'analise' %}" class="btn-card btn-secondary-card" title="Colocar em análise" style="font-size: 12px">
+            <i class="fas fa-clock"></i> Análise
+          </a>
+          {% endif %} 
+          
+          {% if vaga.status != 'finalizada' %}
+          <a href="{% url 'mudar_status_vaga' vaga.id 'finalizada' %}" class="btn-card btn-secondary-card" style="background-color: #fcebeb; color: #dc3545; border-color: #f5c6cb; font-size: 12px;" onclick="return confirm('Tem certeza que deseja finalizar esta vaga?');">
+            <i class="fas fa-times-circle"></i> Finalizar
+          </a>
+          {% endif %} 
+          
+          {% if vaga.status != 'ativa' %}
+          <a href="{% url 'mudar_status_vaga' vaga.id 'ativa' %}" class="btn-card btn-secondary-card" style="background-color: #e6ffed; color: #28a745; border-color: #c3e6cb; font-size: 12px;">
+            <i class="fas fa-check"></i> Reativar
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="job-card" style="grid-column: 1 / -1; text-align: center; align-items: center">
+      <i class="fas fa-folder-plus" style="font-size: 40px; color: #ccc; margin-bottom: 15px"></i>
+      <p>Nenhuma vaga encontrada.</p>
+      {% if request.GET.q %}
+        <a href="{% url 'feed_empresa' %}" style="color: var(--primary-blue);">Limpar pesquisa</a>
+      {% else %}
+        <p>Use o botão "+" para criar sua primeira oportunidade.</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="empty-state" id="jsEmptyState">
+      <p>Nenhuma vaga com este status.</p>
+    </div>
+  </section>
+</main>
+
+<a href="{% url 'criar_vaga' %}" class="fab-button" title="Criar Nova Vaga">
+  <i class="fas fa-plus"></i>
+</a>
+
+<script>
+  function toggleUserMenu() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.classList.toggle('show');
+  }
+
+  window.onclick = function(event) {
+      if (!event.target.closest('.user-menu-container')) {
+          const dropdown = document.getElementById('userDropdown');
+          if (dropdown.classList.contains('show')) {
+              dropdown.classList.remove('show');
+          }
+      }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterStatus = document.getElementById("filterStatus");
+    const jobCards = document.querySelectorAll(".job-card");
+    const emptyState = document.getElementById("jsEmptyState");
+
+    function applyStatusFilter() {
+      const statusValue = filterStatus.value;
+      let visibleCount = 0;
+
+      jobCards.forEach((card) => {
+        const status = card.getAttribute("data-status");
+        const matchesStatus = statusValue === "all" || status === statusValue;
+
+        if (matchesStatus) {
+          card.style.display = "flex";
+          visibleCount++;
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      if (visibleCount === 0 && jobCards.length > 0) {
+        emptyState.style.display = "block";
+      } else {
+        emptyState.style.display = "none";
+      }
+    }
+
+    filterStatus.addEventListener("change", applyStatusFilter);
+  });
+</script>
+{% endblock %}

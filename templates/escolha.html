@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Escolha - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* --- CSS Específico da Página de Escolha --- */
+    :root {
+      --primary-blue: #007bff;
+      --light-blue: #e7f3ff;
+      --dark-blue: #0056b3;
+      --text-dark: #333;
+      --text-medium: #555;
+      --border-light: #e0e0e0;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --shadow-hover: rgba(0, 0, 0, 0.12);
+    }
+
+    /* Sobrescreve o body do base.html para o fundo com imagem */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-blue) !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      /* Imagem de fundo */
+      background-image: url('https://alcancejr.com.br/wp-content/uploads/2020/03/mesa-1024x683.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Overlay escuro */
+    body::before {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+
+    /* Esconde o Header padrão do Base.html */
+    .main-header { display: none !important; }
+
+    /* Reseta o container padrão do Base.html */
+    .container.main-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* --- Estilo do Card de Escolha --- */
+    .choice-card {
+      background-color: #fff;
+      padding: 45px 55px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px var(--shadow-light);
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .choice-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px var(--shadow-hover);
+    }
+
+    h1 {
+      margin-bottom: 35px;
+      color: var(--primary-blue);
+      font-weight: 700;
+      font-size: 36px;
+      letter-spacing: -0.5px;
+    }
+
+    /* Estilização dos Links que envolvem os botões */
+    .choice-buttons a {
+        text-decoration: none;
+        display: block; /* Garante que o link ocupe a linha */
+    }
+
+    /* Botões */
+    .btn-choice {
+      width: 100%;
+      padding: 16px 0;
+      margin: 15px 0;
+      font-size: 19px;
+      font-weight: 600;
+      color: white;
+      background-color: var(--primary-blue);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.35);
+    }
+
+    .btn-choice:hover {
+      background-color: var(--dark-blue);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.45);
+    }
+
+    .btn-choice:active {
+      transform: translateY(0);
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.25);
+    }
+
+    /* Responsividade */
+    @media (max-width: 500px) {
+      .choice-card {
+        width: 90%;
+        padding: 35px 30px;
+      }
+      h1 { font-size: 30px; }
+      .btn-choice { font-size: 17px; padding: 14px 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="choice-card">
+    <h1>Conecta Estágio</h1>
+    
+    <div class="choice-buttons">
+        <a href="{% url 'cadastro_estudante' %}">
+            <button class="btn-choice">Sou Estudante</button>
+        </a>
+
+        <a href="{% url 'cadastro_empresa' %}">
+            <button class="btn-choice">Sou Empresa</button>
+        </a>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 14px;">
+        <a href="{% url 'login' %}" style="color: #555; text-decoration: none;">Já tenho conta</a>
+    </div>
+</div>
+{% endblock %}

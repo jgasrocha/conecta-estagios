@@ -1,0 +1,466 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ vaga.titulo }} - Detalhes{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- RESET E LAYOUT --- */
+    .container.main-container {
+        max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
+        background: transparent !important; box-shadow: none !important; display: block !important;
+    }
+    .main-header { display: none !important; }
+    body { background-color: #f8f9fa !important; margin: 0 !important; }
+
+    /* --- HEADER CUSTOMIZADO --- */
+    .custom-header {
+      background: #007bff; color: white; padding: 10px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
+    }
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+    
+    .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
+    .nav-links a {
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .nav-links a:hover { color: #e7f3ff; text-decoration: underline; }
+
+    /* --- MENU DO USUÁRIO --- */
+    .user-menu-container { position: relative; }
+
+    .user-trigger {
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+        padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+    }
+    .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+    .nav-profile-pic {
+        width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+        border: 2px solid white; background-color: #fff;
+    }
+    
+    .user-dropdown {
+        position: absolute; top: 120%; right: 0;
+        background: white; width: 220px; border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: none;
+        flex-direction: column; overflow: hidden; z-index: 1001; animation: fadeIn 0.2s ease;
+    }
+    .user-dropdown.show { display: flex; }
+
+    .user-dropdown a {
+        padding: 12px 20px; text-decoration: none; color: #333;
+        font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+    }
+    .user-dropdown a:hover { background-color: #e7f3ff; color: #007bff; }
+    .user-dropdown a i { width: 18px; text-align: center; }
+    
+    .divider { height: 1px; background-color: #eee; margin: 0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Container Principal */
+    .detail-container {
+      max-width: 1200px; margin: 40px auto; padding: 40px;
+      background-color: #fff; border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 { color: #007bff; font-weight: 700; font-size: 36px; margin-bottom: 10px; }
+
+    .company-info { font-size: 18px; color: #555; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .company-info i { color: #007bff; }
+
+    /* META DADOS */
+    .job-meta {
+      display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 40px;
+      padding: 20px 0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;
+    }
+    .job-meta div { display: flex; align-items: center; gap: 10px; font-size: 16px; color: #555; }
+    .job-meta i { color: #007bff; font-size: 20px; }
+
+    .section-title { font-size: 24px; color: #007bff; margin-top: 40px; margin-bottom: 20px; font-weight: 600; }
+    .content-block { margin-bottom: 25px; font-size: 16px; color: #333; line-height: 1.8; }
+
+    /* Botões Gerais */
+    .actions-bottom { margin-top: 50px; display: flex; gap: 15px; justify-content: center; }
+    .btn {
+      padding: 12px 30px; border-radius: 25px; text-decoration: none;
+      font-size: 16px; font-weight: 600; transition: 0.3s; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background-color: #007bff; color: white; }
+    .btn-primary:hover { background-color: #0056b3; transform: translateY(-2px); }
+    .btn-secondary { background-color: #f0f0f0; color: #333; }
+    .btn-secondary:hover { background-color: #e0e0e0; }
+    .btn-success { background-color: #28a745; color: white; cursor: default; }
+
+    /* --- LISTA DE CANDIDATOS --- */
+    .candidates-list { margin-top: 50px; border-top: 2px solid #e0e0e0; padding-top: 30px; }
+    
+    .candidate-card {
+        background-color: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
+        padding: 20px; margin-bottom: 15px; transition: 0.3s;
+        display: flex; justify-content: space-between; align-items: center;
+        gap: 20px;
+    }
+    .candidate-card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: #007bff; transform: translateY(-2px); }
+    
+    .cand-info { flex: 1; }
+    .cand-info h3 { margin: 0 0 5px 0; font-size: 18px; font-weight: 700; color: #333; }
+    .cand-info p { margin: 0; font-size: 13px; color: #777; }
+    
+    .cand-meta { font-size: 14px; color: #555; margin-top: 8px; display: flex; gap: 20px; flex-wrap: wrap; }
+    .cand-meta i { color: #007bff; margin-right: 5px; }
+
+    .candidate-card .btn { width: auto !important; flex-shrink: 0; white-space: nowrap; padding: 10px 25px; }
+
+    /* --- ESTILO DO MODAL --- */
+    .ce-modal-overlay {
+        position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; 
+        width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); 
+        z-index: 9999 !important; display: none; 
+        justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .ce-modal-overlay.open { display: flex !important; opacity: 1; }
+
+    .ce-modal-content {
+        background: white; width: 90%; max-width: 800px; max-height: 90vh; /* Modal um pouco mais largo */
+        border-radius: 12px; padding: 0; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        display: flex; flex-direction: column; overflow: hidden; 
+        transform: translateY(20px); transition: transform 0.3s ease;
+        position: relative;
+    }
+    .ce-modal-overlay.open .ce-modal-content { transform: translateY(0); }
+
+    .ce-modal-header {
+        background: #007bff; color: white; padding: 20px;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .ce-modal-header h2 { margin: 0; font-size: 18px; color: white; font-weight: 600; }
+    
+    .ce-modal-body { padding: 30px; overflow-y: auto; }
+    
+    /* Box de Informações do Estudante */
+    .ce-info-box {
+        background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px;
+        padding: 20px; margin-bottom: 25px;
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; /* Grid de 2 colunas */
+    }
+    .ce-info-item { font-size: 14px; color: #555; }
+    .ce-info-item strong { color: #333; display: block; margin-bottom: 3px; font-weight: 600; }
+    .ce-info-item i { color: #007bff; margin-right: 5px; width: 16px; text-align: center; }
+
+    .ce-modal-label { font-size: 14px; color: #007bff; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: block; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+    
+    .ce-letter-box {
+        background: #fff; padding: 20px; border-radius: 8px; border: 1px dashed #ccc;
+        font-size: 15px; line-height: 1.6; color: #333; white-space: pre-wrap; margin-bottom: 10px;
+    }
+
+    .ce-modal-footer {
+        padding: 15px 25px; background: #f8f9fa; border-top: 1px solid #e0e0e0;
+        display: flex; justify-content: flex-end; gap: 15px;
+    }
+    .ce-modal-footer .btn { min-width: 200px; justify-content: center; }
+
+    @media (max-width: 768px) {
+      .custom-header { flex-direction: column; gap: 10px; }
+      .nav-links { margin: 0; }
+      .user-menu-container { margin-top: 5px; }
+      .candidate-card { flex-direction: column; align-items: flex-start; gap: 15px; }
+      .candidate-card .btn { width: 100% !important; justify-content: center; }
+      .ce-modal-footer { flex-direction: column; }
+      .ce-modal-footer .btn { width: 100%; min-width: auto; }
+      .ce-info-box { grid-template-columns: 1fr; } /* Grid vira 1 coluna no mobile */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  
+  <div class="nav-links">
+    {% if user.perfil_empresa %}
+        <a href="{% url 'feed_empresa' %}">Minhas Vagas</a>
+    {% else %}
+        <a href="{% url 'feed_vagas' %}">Vagas</a>
+        <a href="{% url 'historico_candidaturas' %}">Minhas Candidaturas</a>
+    {% endif %}
+  </div>
+
+  <div class="user-menu-container">
+      <div class="user-trigger" onclick="toggleUserMenu()">
+          {% if user.perfil_empresa %}
+              {% if user.perfil_empresa.logo %}
+                  <img src="{{ user.perfil_empresa.logo.url }}" alt="Logo" class="nav-profile-pic">
+              {% else %}
+                  <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                      <i class="fas fa-building"></i>
+                  </div>
+              {% endif %}
+              <span>Olá, {{ user.perfil_empresa.nome_empresa|default:user.username }}</span>
+          {% else %}
+              {% if user.perfil_estudante.foto %}
+                  <img src="{{ user.perfil_estudante.foto.url }}" alt="Foto" class="nav-profile-pic">
+              {% else %}
+                  <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                      <i class="fas fa-user"></i>
+                  </div>
+              {% endif %}
+              <span>Olá, {{ user.first_name|default:user.username }}</span>
+          {% endif %}
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div class="user-dropdown" id="userDropdown">
+          {% if user.perfil_empresa %}
+              <a href="{% url 'perfil_empresa' %}"><i class="fas fa-building"></i> Ver Perfil</a>
+          {% else %}
+              <a href="{% url 'perfil_estudante' %}"><i class="fas fa-user-circle"></i> Ver Perfil</a>
+          {% endif %}
+          <div class="divider"></div>
+          <a href="{% url 'logout' %}" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+  </div>
+</header>
+
+<main class="detail-container">
+  <h1>{{ vaga.titulo }}</h1>
+  <p class="company-info">
+      <i class="fas fa-building"></i> 
+      <strong>{{ vaga.empresa.nome_empresa }}</strong>
+  </p>
+
+  <div class="job-meta">
+    <div>
+        <i class="fas fa-map-marker-alt"></i> 
+        <span>
+            {% if vaga.modalidade == 'remoto' %} Remoto {% else %} {{ vaga.localizacao }} {% endif %}
+            ({{ vaga.get_modalidade_display }})
+        </span>
+    </div>
+    <div><i class="fas fa-briefcase"></i> {{ vaga.get_area_display|default:vaga.area }}</div>
+    <div><i class="fas fa-money-bill-wave"></i> R$ {{ vaga.salario|default:"A combinar" }}</div>
+    <div><i class="fas fa-calendar-alt"></i> Até {{ vaga.prazo_candidatura|date:"d/m/Y" }}</div>
+  </div>
+
+  <h2 class="section-title">Descrição</h2>
+  <div class="content-block">{{ vaga.descricao|linebreaks }}</div>
+
+  {% if vaga.requisitos %}
+  <h2 class="section-title">Requisitos</h2>
+  <div class="content-block">{{ vaga.requisitos|linebreaks }}</div>
+  {% endif %}
+
+  {% if vaga.beneficios %}
+  <h2 class="section-title">Benefícios</h2>
+  <div class="content-block">{{ vaga.beneficios|linebreaks }}</div>
+  {% endif %}
+
+  {% if is_owner %}
+      <div class="candidates-list">
+          <h2 class="section-title" style="border-top: none; color: #28a745;">
+              <i class="fas fa-users"></i> Candidatos Recebidos ({{ candidatos|length }})
+          </h2>
+
+          {% for cand in candidatos %}
+              <div class="candidate-card">
+                  <div class="cand-info">
+                      <h3>{{ cand.estudante.first_name }} {{ cand.estudante.last_name }}</h3>
+                      <p>Aplicou em: {{ cand.data_candidatura|date:"d/m/Y H:i" }}</p>
+                      
+                      <div class="cand-meta">
+                          <span><i class="fas fa-university"></i> {{ cand.estudante.perfil_estudante.curso }}</span>
+                          <span><i class="fas fa-phone"></i> {{ cand.estudante.perfil_estudante.telefone }}</span>
+                      </div>
+                  </div>
+
+                  <button class="btn btn-primary open-modal-btn"
+                          data-name="{{ cand.estudante.first_name }} {{ cand.estudante.last_name }}"
+                          data-email="{{ cand.estudante.email }}"
+                          data-phone="{{ cand.estudante.perfil_estudante.telefone }}"
+                          data-institution="{{ cand.estudante.perfil_estudante.instituicao }}"
+                          data-course="{{ cand.estudante.perfil_estudante.curso }}"
+                          data-semester="{{ cand.estudante.perfil_estudante.semestre }}"
+                          data-skills="{{ cand.estudante.perfil_estudante.habilidades }}"
+                          data-letter="{{ cand.carta_apresentacao|default:'Candidato não enviou carta de apresentação.' }}"
+                          data-resume-url="{% if cand.estudante.perfil_estudante.curriculo %}{{ cand.estudante.perfil_estudante.curriculo.url }}{% endif %}">
+                      <i class="fas fa-eye"></i> Ver Aplicação
+                  </button>
+              </div>
+          {% empty %}
+              <p style="text-align: center; color: #777; margin: 30px 0;">
+                  Ainda não há candidatos para esta vaga.
+              </p>
+          {% endfor %}
+      </div>
+  {% endif %}
+
+  <div class="actions-bottom">
+    {% if user.perfil_empresa %}
+        <a href="{% url 'feed_empresa' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar para Painel
+        </a>
+    {% else %}
+        <a href="{% url 'feed_vagas' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
+        
+        {% if user.perfil_estudante %}
+            {% if ja_candidatou %}
+                <button class="btn btn-success" disabled>
+                    <i class="fas fa-check-circle"></i> Candidatura Enviada
+                </button>
+            {% else %}
+                <a href="{% url 'candidatar_vaga' vaga.id %}" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Candidatar-me
+                </a>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+  </div>
+</main>
+
+<div class="ce-modal-overlay" id="candidateModal">
+    <div class="ce-modal-content">
+        <div class="ce-modal-header">
+            <h2 id="modalCandName">Nome do Candidato</h2>
+        </div>
+        
+        <div class="ce-modal-body">
+            <div class="ce-info-box">
+                <div class="ce-info-item">
+                    <strong><i class="fas fa-envelope"></i> Email</strong>
+                    <span id="modalCandEmail">email@teste.com</span>
+                </div>
+                <div class="ce-info-item">
+                    <strong><i class="fas fa-phone"></i> Telefone</strong>
+                    <span id="modalCandPhone">(00) 0000-0000</span>
+                </div>
+                <div class="ce-info-item">
+                    <strong><i class="fas fa-university"></i> Instituição</strong>
+                    <span id="modalCandInst">Faculdade X</span>
+                </div>
+                <div class="ce-info-item">
+                    <strong><i class="fas fa-graduation-cap"></i> Curso</strong>
+                    <span id="modalCandCourse">Engenharia</span>
+                </div>
+                <div class="ce-info-item">
+                    <strong><i class="fas fa-clock"></i> Semestre</strong>
+                    <span id="modalCandSem">5</span>º Semestre
+                </div>
+                <div class="ce-info-item" style="grid-column: 1 / -1;">
+                    <strong><i class="fas fa-tools"></i> Habilidades</strong>
+                    <span id="modalCandSkills">Java, Python</span>
+                </div>
+            </div>
+
+            <span class="ce-modal-label">Carta de Apresentação</span>
+            <div class="ce-letter-box" id="modalCandLetter">
+                Texto da carta...
+            </div>
+        </div>
+        
+        <div class="ce-modal-footer">
+            <button class="btn btn-secondary" id="closeModalBtn">Fechar</button>
+            <a href="#" target="_blank" class="btn btn-primary" id="modalResumeBtn">
+                <i class="fas fa-file-pdf"></i> Baixar Currículo
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. MENU DROPDOWN
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.user-menu-container')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+
+    // 2. MODAL LOGIC (Atualizado para novos campos)
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('candidateModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const btns = document.querySelectorAll('.open-modal-btn');
+
+        // Referências aos elementos do modal
+        const mName = document.getElementById('modalCandName');
+        const mEmail = document.getElementById('modalCandEmail');
+        const mPhone = document.getElementById('modalCandPhone');
+        const mInst = document.getElementById('modalCandInst');
+        const mCourse = document.getElementById('modalCandCourse');
+        const mSem = document.getElementById('modalCandSem');
+        const mSkills = document.getElementById('modalCandSkills');
+        const mLetter = document.getElementById('modalCandLetter');
+        const mResumeBtn = document.getElementById('modalResumeBtn');
+
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Pega dados do botão
+                const data = {
+                    name: btn.getAttribute('data-name'),
+                    email: btn.getAttribute('data-email'),
+                    phone: btn.getAttribute('data-phone'),
+                    inst: btn.getAttribute('data-institution'),
+                    course: btn.getAttribute('data-course'),
+                    sem: btn.getAttribute('data-semester'),
+                    skills: btn.getAttribute('data-skills'),
+                    letter: btn.getAttribute('data-letter'),
+                    resumeUrl: btn.getAttribute('data-resume-url')
+                };
+
+                // Preenche o modal
+                mName.textContent = data.name;
+                mEmail.textContent = data.email;
+                mPhone.textContent = data.phone;
+                mInst.textContent = data.inst;
+                mCourse.textContent = data.course;
+                mSem.textContent = data.sem;
+                mSkills.textContent = data.skills || "Nenhuma informada";
+                mLetter.textContent = data.letter;
+
+                // Configura botão de currículo
+                if (data.resumeUrl) {
+                    mResumeBtn.href = data.resumeUrl;
+                    mResumeBtn.style.display = 'inline-flex';
+                    mResumeBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Baixar Currículo';
+                    mResumeBtn.classList.remove('btn-secondary');
+                    mResumeBtn.classList.add('btn-primary');
+                    mResumeBtn.style.pointerEvents = 'auto';
+                } else {
+                    mResumeBtn.href = '#';
+                    mResumeBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Sem Currículo';
+                    mResumeBtn.classList.remove('btn-primary');
+                    mResumeBtn.classList.add('btn-secondary');
+                    mResumeBtn.style.pointerEvents = 'none';
+                }
+
+                modal.classList.add('open');
+            });
+        });
+
+        const closeModal = () => modal.classList.remove('open');
+        
+        if(closeModalBtn) {
+            closeModalBtn.addEventListener('click', closeModal);
+        }
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Candidatar-se - {{ vaga.titulo }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- 1. RESET DE LAYOUT (GLOBAL) --- */
+    body {
+        background-color: #f8f9fa !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Esconde o header original */
+    .main-header { display: none !important; }
+
+    /* Anula o container padrão do Django/Bootstrap */
+    .container, .container.main-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        display: block !important;
+    }
+
+    /* --- 2. HEADER CUSTOMIZADO (Igual ao Feed Estudante) --- */
+    .custom-header {
+      background: #007bff; color: white; padding: 10px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); position: sticky; top: 0; z-index: 1000;
+    }
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+    
+    .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
+    .nav-links a {
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500; transition: 0.3s;
+    }
+    .nav-links a:hover { color: #e7f3ff; text-decoration: underline; }
+
+    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
+    .user-menu-container { position: relative; }
+
+    .user-trigger {
+        display: flex; align-items: center; gap: 10px; cursor: pointer;
+        padding: 5px 15px; border-radius: 30px; transition: 0.3s; user-select: none;
+    }
+    .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
+
+    .nav-profile-pic {
+        width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
+        border: 2px solid white; background-color: #fff;
+    }
+    
+    .user-dropdown {
+        position: absolute; top: 120%; right: 0;
+        background: white; width: 200px; border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15); display: none;
+        flex-direction: column; overflow: hidden; z-index: 1001; animation: fadeIn 0.2s ease;
+    }
+    .user-dropdown.show { display: flex; }
+
+    .user-dropdown a {
+        padding: 12px 20px; text-decoration: none; color: #333;
+        font-size: 14px; transition: 0.2s; display: flex; align-items: center; gap: 10px;
+    }
+    .user-dropdown a:hover { background-color: #e7f3ff; color: #007bff; }
+    .user-dropdown a i { width: 18px; text-align: center; }
+    
+    .divider { height: 1px; background-color: #eee; margin: 0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* --- 3. CONTAINER DO FORMULÁRIO --- */
+    .application-container {
+      max-width: 800px; margin: 40px auto; padding: 40px;
+      background-color: #fff; border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 { color: #007bff; font-weight: 700; font-size: 32px; margin-bottom: 10px; text-align: center; }
+    
+    .vacancy-title-info {
+        font-size: 18px; color: #555; text-align: center; margin-bottom: 35px; font-weight: 500;
+    }
+    .vacancy-title-info strong { color: #333; }
+
+    .form-group { margin-bottom: 25px; }
+
+    label { display: block; margin-bottom: 10px; font-weight: 600; color: #333; font-size: 15px; }
+
+    input[type="text"], input[type="email"], input[type="tel"], textarea {
+      width: 100%; padding: 14px; border: 1px solid #e0e0e0;
+      border-radius: 10px; font-size: 15px; color: #333;
+      background-color: #fcfcfc; box-sizing: border-box; transition: border-color 0.3s ease;
+    }
+
+    input[readonly] {
+        background-color: #f1f3f5; color: #6c757d; border-color: #dee2e6; cursor: not-allowed;
+    }
+
+    textarea:focus { border-color: #007bff; box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); outline: none; }
+    textarea { resize: vertical; min-height: 140px; }
+
+    /* Botões */
+    .button-group { display: flex; gap: 15px; margin-top: 35px; }
+
+    button[type="submit"] {
+      flex: 2; background: #007bff; color: white; border: none;
+      padding: 15px; font-size: 17px; font-weight: 600; border-radius: 30px;
+      cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    button[type="submit"]:hover { background: #0056b3; transform: translateY(-2px); }
+    
+    .btn-cancel {
+      flex: 1; background-color: #f1f1f1; color: #555; border: none; padding: 15px;
+      font-size: 17px; font-weight: 600; border-radius: 30px; cursor: pointer;
+      text-align: center; text-decoration: none; display: inline-block; transition: 0.3s;
+    }
+    .btn-cancel:hover { background-color: #e2e2e2; color: #333; }
+
+    /* Card de Currículo */
+    .resume-status {
+        padding: 20px; border: 2px dashed #007bff; border-radius: 10px;
+        background-color: #f0f8ff; display: flex; align-items: center; gap: 20px;
+    }
+    .resume-status i { font-size: 28px; color: #007bff; }
+    
+    .resume-warning {
+        padding: 20px; border: 2px dashed #dc3545; border-radius: 10px;
+        background-color: #fff5f5; color: #dc3545; display: flex; align-items: center; gap: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .custom-header { flex-direction: column; gap: 10px; }
+        .nav-links { margin: 0; }
+        .user-menu-container { margin-top: 5px; }
+        .button-group { flex-direction: column; }
+        .application-container { padding: 25px; margin: 20px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  
+  <div class="nav-links">
+    <a href="{% url 'feed_vagas' %}" style="text-decoration: underline;">Feed de Vagas</a>
+    <a href="{% url 'historico_candidaturas' %}">Minhas Candidaturas</a>
+  </div>
+
+  <div class="user-menu-container">
+      <div class="user-trigger" onclick="toggleUserMenu()">
+          {% if user.perfil_estudante.foto %}
+              <img src="{{ user.perfil_estudante.foto.url }}" alt="Foto" class="nav-profile-pic">
+          {% else %}
+              <div class="nav-profile-pic" style="display: flex; align-items: center; justify-content: center; background: white; color: #007bff;">
+                  <i class="fas fa-user"></i>
+              </div>
+          {% endif %}
+          
+          <span>Olá, {{ user.first_name|default:user.username }}</span>
+          <i class="fas fa-chevron-down" style="font-size: 12px;"></i>
+      </div>
+
+      <div class="user-dropdown" id="userDropdown">
+          <a href="{% url 'perfil_estudante' %}"><i class="fas fa-user-circle"></i> Ver Perfil</a>
+          <div class="divider"></div>
+          <a href="{% url 'logout' %}" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Sair</a>
+      </div>
+  </div>
+</header>
+
+<div class="application-container">
+  <h1>Candidatar-me à Vaga</h1>
+  <p class="vacancy-title-info">Você está se candidatando para: <strong>{{ vaga.titulo }}</strong></p>
+
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="form-group">
+      <label>Nome Completo:</label>
+      <input type="text" value="{{ user.get_full_name|default:user.username }}" readonly />
+    </div>
+
+    <div class="form-group">
+      <label>E-mail:</label>
+      <input type="email" value="{{ user.email }}" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Telefone:</label>
+        <input type="text" value="{{ user.perfil_estudante.telefone }}" readonly />
+    </div>
+
+    <div class="form-group">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div>
+                <label>Instituição:</label>
+                <input type="text" value="{{ user.perfil_estudante.instituicao }}" readonly />
+            </div>
+            <div>
+                <label>Curso:</label>
+                <input type="text" value="{{ user.perfil_estudante.curso }}" readonly />
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+      <label>Currículo (PDF):</label>
+      
+      {% if user.perfil_estudante.curriculo %}
+          <div class="resume-status">
+              <i class="fas fa-file-pdf"></i>
+              <div style="flex: 1;">
+                  <div style="font-weight: 700; color: #333;">Currículo Cadastrado</div>
+                  <a href="{{ user.perfil_estudante.curriculo.url }}" target="_blank" style="color: #007bff; font-size: 14px; text-decoration: underline;">
+                      Visualizar Arquivo Atual
+                  </a>
+              </div>
+              <div style="color: #28a745; font-weight: 600; font-size: 14px;">
+                  <i class="fas fa-check-circle"></i> Pronto para enviar
+              </div>
+          </div>
+          <small style="color: #777; margin-top: 8px; display: block;">
+              Este arquivo será enviado à empresa. <a href="{% url 'editar_estudante' %}" style="color: #007bff;">Editar no Perfil</a>
+          </small>
+      {% else %}
+          <div class="resume-warning">
+              <i class="fas fa-exclamation-triangle" style="font-size: 24px;"></i>
+              <div>
+                  <strong>Atenção:</strong> Você ainda não cadastrou seu currículo.
+                  <br>
+                  <a href="{% url 'editar_estudante' %}" style="color: #dc3545; text-decoration: underline; font-weight: 700;">Clique aqui para fazer upload</a> antes de se candidatar.
+              </div>
+          </div>
+      {% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.carta_apresentacao.id_for_label }}">Carta de Apresentação (Opcional):</label>
+      <textarea name="carta_apresentacao" id="{{ form.carta_apresentacao.id_for_label }}" 
+                placeholder="Escreva uma breve apresentação sobre você e por que você é ideal para esta vaga..."></textarea>
+    </div>
+    
+    <div class="button-group">
+      {% if user.perfil_estudante.curriculo %}
+          <button type="submit">Confirmar Candidatura</button>
+      {% else %}
+          <button type="button" disabled style="background-color: #ccc; cursor: not-allowed; box-shadow: none;">Cadastre o Currículo para Enviar</button>
+      {% endif %}
+      
+      <a href="{% url 'detalhe_vaga' vaga.id %}" class="btn-cancel">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<script>
+    function toggleUserMenu() {
+        const dropdown = document.getElementById('userDropdown');
+        dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.closest('.user-menu-container')) {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        }
+    }
+</script>
+{% endblock %}

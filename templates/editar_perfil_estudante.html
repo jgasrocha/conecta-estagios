@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Perfil - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    /* 1. Correção para o Navbar não descer */
+    body {
+        background-color: #f8f9fa !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Esconde elementos padrão do base.html que atrapalham */
+    .main-header, header.main-header { display: none !important; }
+    
+    /* Zera o container padrão */
+    .container, .container.main-container {
+        max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
+        background: transparent !important; box-shadow: none !important; display: block !important;
+    }
+
+    /* --- HEADER NOVO --- */
+    .custom-header {
+      background: #007bff; color: white; padding: 15px 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; box-sizing: border-box; position: sticky; top: 0; z-index: 1000;
+    }
+    .custom-header nav a { color: white; margin-left: 25px; text-decoration: none; font-weight: 500; }
+
+    /* --- CONTEÚDO --- */
+    .profile-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+    .profile-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; padding-bottom: 40px; }
+    
+    .profile-header {
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      padding: 40px 20px; text-align: center; color: white; margin-bottom: 30px;
+    }
+
+    /* --- ÁREA DA FOTO COM LÁPIS (NOVO) --- */
+    .photo-edit-wrapper {
+        position: relative; width: 130px; height: 130px; margin: 0 auto 15px auto;
+    }
+    .photo-preview {
+        width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+        border: 4px solid white; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    /* Botão de Lápis Flutuante */
+    .photo-edit-btn {
+        position: absolute; bottom: 5px; right: 5px;
+        background-color: white; color: #007bff;
+        width: 40px; height: 40px; border-radius: 50%;
+        display: flex; justify-content: center; align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer;
+        transition: 0.3s;
+        border: 2px solid #f0f0f0;
+    }
+    .photo-edit-btn:hover { background-color: #f8f9fa; transform: scale(1.1); }
+    .photo-edit-btn i { font-size: 18px; }
+
+    /* --- FORMULÁRIO --- */
+    .edit-form { padding: 0 50px; }
+    .section-label {
+        color: #007bff; font-size: 18px; font-weight: 700; 
+        border-bottom: 2px solid #e7f3ff; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-weight: 600; color: #333; margin-bottom: 8px; font-size: 14px; }
+    
+    .input-wrapper { position: relative; }
+    .input-wrapper i.edit-icon {
+        position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+        color: #bbb; font-size: 14px; pointer-events: none;
+    }
+
+    input[type="text"], input[type="email"], input[type="number"], input[type="tel"], textarea, select {
+        width: 100%; padding: 14px 40px 14px 15px; 
+        border: 1px solid #e0e0e0; border-radius: 10px;
+        font-size: 15px; background: #fcfcfc; box-sizing: border-box; transition: all 0.3s;
+    }
+    input:focus, textarea:focus, select:focus {
+        border-color: #007bff; background: #fff; box-shadow: 0 0 0 4px #e7f3ff; outline: none;
+    }
+    
+    /* CURRÍCULO */
+    .resume-upload-wrapper {
+        border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;
+        position: relative; text-align: center; padding: 30px 20px;
+        transition: all 0.3s; cursor: pointer;
+    }
+    .resume-upload-wrapper:hover { border-color: #007bff; background-color: #f0f7ff; }
+    .resume-icon-large { font-size: 40px; color: #dc3545; margin-bottom: 10px; display: block; }
+    .resume-filename { font-weight: 600; color: #333; font-size: 15px; margin-bottom: 5px; display: block; word-break: break-all; }
+    .resume-action-text { font-size: 14px; color: #007bff; font-weight: 500; }
+    .resume-upload-wrapper input[type="file"] {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+    }
+
+    /* BOTÕES */
+    .btn-group { display: flex; gap: 15px; margin-top: 40px; justify-content: center; }
+    button[type="submit"] {
+        background: #007bff; color: white; padding: 14px 40px; border: none;
+        border-radius: 30px; font-weight: 600; cursor: pointer; font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0,123,255,0.3); transition: 0.3s;
+    }
+    button[type="submit"]:hover { transform: translateY(-2px); background: #0056b3; }
+    
+    .btn-cancel {
+        background: #f1f1f1; color: #555; padding: 14px 30px; border-radius: 30px;
+        text-decoration: none; font-weight: 600; font-size: 16px; transition: 0.3s;
+    }
+    .btn-cancel:hover { background: #e2e2e2; }
+
+    @media (max-width: 600px) {
+        .edit-form { padding: 0 20px; }
+        .btn-group { flex-direction: column; }
+        .btn-cancel { text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo" style="font-size: 24px; font-weight: 700;">Conecta Estágio</div>
+  <nav>
+    <a href="{% url 'perfil_estudante' %}">Voltar</a>
+  </nav>
+</header>
+
+<main class="profile-container">
+  <div class="profile-card">
+    
+    <form method="post" enctype="multipart/form-data" class="edit-form">
+        {% csrf_token %}
+        
+        <div class="profile-header">
+            <div class="photo-edit-wrapper">
+                {% if user.perfil_estudante.foto %}
+                    <img src="{{ user.perfil_estudante.foto.url }}" class="photo-preview" id="photoPreview">
+                {% else %}
+                    <div class="photo-preview" style="display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user-graduate" style="font-size: 50px; color: #ccc;"></i>
+                    </div>
+                {% endif %}
+                
+                <label for="id_foto" class="photo-edit-btn" title="Alterar Foto">
+                    <i class="fas fa-pencil-alt"></i>
+                </label>
+            </div>
+            
+            <input type="file" name="foto" id="id_foto" accept="image/*" style="display: none;">
+
+            <h1>Editar Perfil</h1>
+            <p style="font-size: 14px; opacity: 0.8;">Toque na imagem acima para alterar sua foto</p>
+        </div>
+
+        <div class="section-label">Dados Pessoais</div>
+        
+        <div class="form-group">
+            <label>Nome:</label>
+            <div class="input-wrapper">
+                {{ user_form.first_name }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Sobrenome:</label>
+            <div class="input-wrapper">
+                {{ user_form.last_name }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <div class="input-wrapper">
+                {{ user_form.email }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+
+        <div class="section-label">Dados Acadêmicos</div>
+        
+        <div class="form-group">
+            <label>Telefone:</label>
+            <div class="input-wrapper">
+                {{ profile_form.telefone }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Instituição de Ensino:</label>
+            <div class="input-wrapper">
+                {{ profile_form.instituicao }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Curso:</label>
+            <div class="input-wrapper">
+                {{ profile_form.curso }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Semestre:</label>
+            <div class="input-wrapper">
+                {{ profile_form.semestre }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Habilidades:</label>
+            <div class="input-wrapper">
+                {{ profile_form.habilidades }}
+                <i class="fas fa-pencil-alt edit-icon"></i>
+            </div>
+            <small style="color: #888; font-size: 12px; margin-top: 5px; display: block;">Separe por vírgulas (ex: Java, Python, SQL)</small>
+        </div>
+
+        <div class="section-label">Meu Currículo</div>
+        
+        <div class="form-group">
+            <div class="resume-upload-wrapper">
+                <div class="resume-content">
+                    <i class="fas fa-file-pdf resume-icon-large"></i>
+                    <span id="resumeFileName" class="resume-filename">
+                        {% if user.perfil_estudante.curriculo %}
+                            {{ user.perfil_estudante.curriculo.name }}
+                        {% else %}
+                            Nenhum arquivo enviado
+                        {% endif %}
+                    </span>
+                    <div class="resume-action-text" id="resumeActionText">
+                        <i class="fas fa-pencil-alt"></i> Toque para alterar o PDF
+                    </div>
+                </div>
+                <input type="file" name="curriculo" id="id_curriculo" accept=".pdf">
+            </div>
+            <small style="text-align: center; display: block; margin-top: 8px; color: #888;">
+                Formatos aceitos: PDF. Tamanho máximo recomendado: 5MB.
+            </small>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit">Salvar Alterações</button>
+            <a href="{% url 'perfil_estudante' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+  </div>
+</main>
+
+<script>
+    // 1. Preview da FOTO
+    const photoInput = document.getElementById('id_foto');
+    const photoPreview = document.getElementById('photoPreview');
+    const previewContainer = document.querySelector('.photo-preview');
+
+    if(photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Se o preview atual for uma div (ícone), substitui por imagem
+                    if (previewContainer.tagName === 'DIV') {
+                        const newImg = document.createElement('img');
+                        newImg.className = 'photo-preview';
+                        newImg.id = 'photoPreview';
+                        newImg.src = e.target.result;
+                        previewContainer.parentNode.replaceChild(newImg, previewContainer);
+                    } else {
+                        // Se já for imagem, apenas troca o source
+                        document.getElementById('photoPreview').src = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    // 2. Preview do CURRÍCULO
+    const fileInput = document.getElementById('id_curriculo');
+    const fileNameSpan = document.getElementById('resumeFileName');
+    const actionText = document.getElementById('resumeActionText');
+
+    if(fileInput) {
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                fileNameSpan.textContent = this.files[0].name;
+                fileNameSpan.style.color = "#28a745"; 
+                actionText.innerHTML = '<i class="fas fa-check-circle"></i> Arquivo pronto para enviar';
+                actionText.style.color = "#28a745";
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil da Empresa - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* --- CSS Baseado no seu Modelo --- */
+    :root {
+      --primary-blue: #007bff;
+      --light-blue: #e7f3ff;
+      --dark-blue: #0056b3;
+      --text-dark: #333;
+      --text-medium: #555;
+      --text-light: #777;
+      --border-light: #e0e0e0;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --bg-gray-light: #f8f9fa;
+    }
+
+    body {
+      background-color: var(--bg-gray-light) !important;
+    }
+
+    /* Esconde o Header padrão do Base.html */
+    .main-header { display: none !important; }
+
+    /* Reset do container do base.html */
+    .container.main-container {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        display: block !important;
+    }
+
+    /* --- HEADER CUSTOMIZADO (FIXO) --- */
+    .custom-header {
+      background: var(--primary-blue);
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      
+      /* Fixação no topo */
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      width: 100%;
+      box-sizing: border-box; /* Garante que o padding não estoure a largura */
+    }
+    .custom-header .logo { font-size: 24px; font-weight: 700; }
+    .custom-header nav a {
+      color: white; margin-left: 25px; text-decoration: none; font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .custom-header nav a:hover { color: var(--light-blue); text-decoration: underline; }
+
+    /* --- CONTAINER DO PERFIL --- */
+    .profile-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .profile-card {
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 8px 30px var(--shadow-light);
+        overflow: hidden;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+        padding: 30px;
+        text-align: center;
+        color: white;
+    }
+
+    .profile-picture-container {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        margin: 0 auto 15px auto;
+    }
+    
+    .profile-picture {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        border: 5px solid white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        object-fit: cover;
+        background-color: #fff;
+    }
+
+    .profile-name {
+        font-size: 28px; font-weight: 700; margin: 0;
+    }
+    .profile-subtitle {
+        font-size: 18px; font-weight: 400; opacity: 0.9; margin-top: 5px;
+    }
+    
+    .profile-body { padding: 30px; }
+
+    .section-title {
+        color: var(--primary-blue);
+        font-size: 22px;
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-light);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex; align-items: center; gap: 15px; font-size: 16px;
+    }
+
+    .info-item i {
+        color: var(--primary-blue);
+        font-size: 20px;
+        width: 25px;
+        text-align: center;
+    }
+
+    .info-item span { color: var(--text-medium); }
+    
+    .stats-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .stat-box {
+        background-color: var(--light-blue);
+        color: var(--dark-blue);
+        padding: 15px 25px;
+        border-radius: 12px;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+    }
+    .stat-number { font-size: 24px; font-weight: 700; display: block; }
+    .stat-label { font-size: 14px; }
+
+    .profile-actions { text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 15px; }
+
+    .btn {
+        background-color: var(--primary-blue);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        display: inline-block;
+        border: none; cursor: pointer;
+    }
+
+    .btn:hover { background-color: var(--dark-blue); transform: translateY(-3px); }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+    }
+    .btn-secondary:hover { background-color: #5a6268; }
+
+    /* Descrição com quebra de linha */
+    .description-text {
+        line-height: 1.8;
+        color: #555;
+    }
+
+    @media (max-width: 768px) {
+        .custom-header { flex-direction: column; text-align: center; }
+        .custom-header nav { margin-top: 10px; }
+        .profile-actions { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header class="custom-header">
+  <div class="logo">Conecta Estágio</div>
+  <nav>
+    <a href="{% url 'feed_empresa' %}">Minhas Vagas</a>
+    <a href="{% url 'criar_vaga' %}">Criar Vaga</a>
+    <a href="{% url 'feed_empresa' %}"><i class="fas fa-arrow-left"></i> Voltar</a>
+  </nav>
+</header>
+
+<main class="profile-container">
+  <div class="profile-card">
+    
+    <div class="profile-header">
+      <div class="profile-picture-container">
+        {% if user.perfil_empresa.logo %}
+            <img src="{{ user.perfil_empresa.logo.url }}" alt="Logo da Empresa" class="profile-picture">
+        {% else %}
+            <div class="profile-picture" style="display: flex; align-items: center; justify-content: center; background: white;">
+                <i class="fas fa-building" style="font-size: 60px; color: #ccc;"></i>
+            </div>
+        {% endif %}
+      </div>
+      
+      <h1 class="profile-name">{{ user.perfil_empresa.nome_empresa }}</h1>
+      <p class="profile-subtitle">CNPJ: {{ user.perfil_empresa.cnpj }}</p>
+    </div>
+    
+    <div class="profile-body">
+      
+      <h2 class="section-title">Informações de Contato</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <i class="fas fa-envelope"></i>
+          <span>{{ user.email }}</span>
+        </div>
+        <div class="info-item">
+          <i class="fas fa-phone"></i>
+          <span>{{ user.perfil_empresa.telefone }}</span>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top: 30px;">Sobre a Empresa</h2>
+      <div class="description-text">
+          {% if user.perfil_empresa.descricao %}
+            {{ user.perfil_empresa.descricao|linebreaks }}
+          {% else %}
+            <p style="color: #777; font-style: italic;">Nenhuma descrição cadastrada.</p>
+          {% endif %}
+      </div>
+
+      <h2 class="section-title" style="margin-top: 30px;">Resumo</h2>
+      <div class="stats-container">
+          <div class="stat-box">
+              <span class="stat-number">{{ user.perfil_empresa.vagas.count }}</span>
+              <span class="stat-label">Total de Vagas</span>
+          </div>
+          <div class="stat-box">
+              <span class="stat-number">{{ user.perfil_empresa.vagas.all|length }}</span> 
+              <span class="stat-label">Oportunidades Publicadas</span>
+          </div>
+      </div>
+
+      <div class="profile-actions">
+        <a href="{% url 'editar_empresa' %}" class="btn">Editar Perfil</a>
+        <a href="{% url 'criar_vaga' %}" class="btn btn-secondary">Publicar Nova Vaga</a>
+      </div>
+
+    </div>
+  </div>
+</main>
+{% endblock %}

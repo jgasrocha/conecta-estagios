@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cadastro Estudante - Conecta Estágio{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* --- Variáveis e Cores --- */
+    :root {
+      --primary-blue: #007bff;
+      --light-blue: #e7f3ff;
+      --dark-blue: #0056b3;
+      --text-dark: #333;
+      --text-medium: #555;
+      --text-light: #777;
+      --border-light: #e0e0e0;
+      --shadow-light: rgba(0, 0, 0, 0.08);
+      --shadow-hover: rgba(0, 0, 0, 0.12);
+    }
+
+    /* Sobrescreve o body do base.html para aceitar imagem e centralização */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light-blue) !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      /* Imagem de fundo */
+      background-image: url('https://alcancejr.com.br/wp-content/uploads/2020/03/mesa-1024x683.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* Overlay escuro */
+    body::before {
+      content: '';
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: -1;
+    }
+
+    /* Esconde o Header padrão */
+    .main-header { display: none !important; }
+    
+    /* Remove estilos do container padrão do base.html */
+    .container.main-container {
+        background: transparent !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* --- Novo Card de Cadastro --- */
+    .student-card {
+      background-color: #fff;
+      padding: 35px 50px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px var(--shadow-light);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .student-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px var(--shadow-hover);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: var(--primary-blue);
+      font-weight: 600;
+      font-size: 28px;
+    }
+
+    /* Estilização dos Labels */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      margin-top: 15px;
+      font-weight: 500;
+      color: var(--text-medium);
+      text-align: left;
+      font-size: 15px;
+    }
+
+    /* Estilização Global dos Inputs (gerados pelo Django) */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"], 
+    input[type="tel"], 
+    input[type="file"],
+    select {
+      width: 100%; 
+      padding: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      font-size: 15px;
+      color: var(--text-dark);
+      background-color: #fcfcfc;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    /* Estilização específica para Select (Setinha customizada) */
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007bff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-6.5%200-12.3%203.2-15.9%208.1-3.6%204.9-3.4%2011.6.3%2016.3l139.3%20139.3c5.3%205.3%2013.8%205.3%2019.1%200l139.3-139.3c3.7-4.7%203.9-11.4.3-16.3z%22%2F%3E%3C%2Fsvg%3E');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 12px;
+      padding-right: 35px;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      outline: none;
+    }
+
+    /* Botão de Cadastro */
+    button[type="submit"] {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--primary-blue);
+      border: none;
+      border-radius: 25px;
+      color: white;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      margin-top: 25px;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+
+    button[type="submit"]:hover {
+      background-color: var(--dark-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+
+    /* Tratamento de Erros e Textos de Ajuda */
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding: 0;
+        text-align: left;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+    
+    .helptext {
+        font-size: 12px;
+        color: #777;
+        margin-top: 4px;
+        display: block;
+        text-align: left;
+    }
+    
+    /* Input de arquivo (currículo) */
+    input[type="file"] {
+        padding: 8px;
+        background-color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="student-card">
+    <h2>Cadastro de Estudante</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        {% if user_form.non_field_errors %}
+            <div class="errorlist">{{ user_form.non_field_errors }}</div>
+        {% endif %}
+
+        {% for field in user_form %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="errorlist">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% for field in profile_form %}
+            <div>
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="errorlist">{{ field.errors }}</div>
+                {% endif %}
+                {% if field.help_text %}
+                    <span class="helptext">{{ field.help_text }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <div style="margin-top: 20px; font-size: 14px; color: #555;">
+        Já possui cadastro? <a href="{% url 'login' %}" style="color: var(--primary-blue); text-decoration: none; font-weight: 600;">Faça Login</a>
+    </div>
+</div>
+{% endblock %}
