@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-    /* --- CSS Baseado no seu Modelo --- */
     :root {
       --primary-blue: #007bff;
       --light-blue: #e7f3ff;
@@ -24,10 +23,8 @@
       background-color: var(--bg-gray-light) !important;
     }
 
-    /* Esconde o Header padrão do Base.html */
     .main-header { display: none !important; }
 
-    /* Reset do container do base.html */
     .container.main-container {
         max-width: 100% !important;
         width: 100% !important;
@@ -38,7 +35,6 @@
         display: block !important;
     }
 
-    /* --- HEADER CUSTOMIZADO (FIXO) --- */
     .custom-header {
       background: var(--primary-blue);
       color: white;
@@ -48,12 +44,11 @@
       align-items: center;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       
-      /* Fixação no topo */
       position: sticky;
       top: 0;
       z-index: 1000;
       width: 100%;
-      box-sizing: border-box; /* Garante que o padding não estoure a largura */
+      box-sizing: border-box;
     }
     .custom-header .logo { font-size: 24px; font-weight: 700; }
     .custom-header nav a {
@@ -62,7 +57,6 @@
     }
     .custom-header nav a:hover { color: var(--light-blue); text-decoration: underline; }
 
-    /* --- CONTAINER DO PERFIL --- */
     .profile-container {
         max-width: 900px;
         margin: 40px auto;
@@ -176,7 +170,6 @@
     }
     .btn-secondary:hover { background-color: #5a6268; }
 
-    /* Descrição com quebra de linha */
     .description-text {
         line-height: 1.8;
         color: #555;

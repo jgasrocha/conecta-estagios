@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-    /* --- 1. RESET DE LAYOUT (GLOBAL) --- */
     body {
         background-color: #f8f9fa !important;
         margin: 0 !important;
@@ -15,10 +14,8 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    /* Esconde o header original */
     .main-header { display: none !important; }
 
-    /* Anula o container padrão do Django/Bootstrap */
     .container, .container.main-container {
         max-width: 100% !important;
         width: 100% !important;
@@ -29,7 +26,6 @@
         display: block !important;
     }
 
-    /* --- 2. HEADER CUSTOMIZADO (Igual ao Feed Estudante) --- */
     .custom-header {
       background: #007bff; color: white; padding: 10px 30px;
       display: flex; justify-content: space-between; align-items: center;
@@ -43,7 +39,6 @@
     }
     .nav-links a:hover { color: #e7f3ff; text-decoration: underline; }
 
-    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
     .user-menu-container { position: relative; }
 
     .user-trigger {
@@ -75,7 +70,6 @@
     .divider { height: 1px; background-color: #eee; margin: 0; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 3. CONTAINER DO FORMULÁRIO --- */
     .application-container {
       max-width: 800px; margin: 40px auto; padding: 40px;
       background-color: #fff; border-radius: 15px;
@@ -106,7 +100,6 @@
     textarea:focus { border-color: #007bff; box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1); outline: none; }
     textarea { resize: vertical; min-height: 140px; }
 
-    /* Botões */
     .button-group { display: flex; gap: 15px; margin-top: 35px; }
 
     button[type="submit"] {
@@ -123,7 +116,6 @@
     }
     .btn-cancel:hover { background-color: #e2e2e2; color: #333; }
 
-    /* Card de Currículo */
     .resume-status {
         padding: 20px; border: 2px dashed #007bff; border-radius: 10px;
         background-color: #f0f8ff; display: flex; align-items: center; gap: 20px;

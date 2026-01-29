@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-    /* --- RESET E LAYOUT --- */
     .container.main-container {
         max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
         background: transparent !important; box-shadow: none !important; display: block !important;
@@ -15,7 +14,6 @@
     .main-header { display: none !important; }
     body { background-color: #f8f9fa !important; margin: 0 !important; }
 
-    /* --- HEADER CUSTOMIZADO --- */
     .custom-header {
       background: #007bff; color: white; padding: 10px 30px;
       display: flex; justify-content: space-between; align-items: center;
@@ -29,7 +27,6 @@
     }
     .nav-links a:hover { color: #e7f3ff; text-decoration: underline; }
 
-    /* --- MENU DO USUÁRIO --- */
     .user-menu-container { position: relative; }
 
     .user-trigger {
@@ -61,7 +58,6 @@
     .divider { height: 1px; background-color: #eee; margin: 0; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Container Principal */
     .detail-container {
       max-width: 1200px; margin: 40px auto; padding: 40px;
       background-color: #fff; border-radius: 12px;
@@ -73,7 +69,6 @@
     .company-info { font-size: 18px; color: #555; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
     .company-info i { color: #007bff; }
 
-    /* META DADOS */
     .job-meta {
       display: flex; flex-wrap: wrap; gap: 30px; margin-bottom: 40px;
       padding: 20px 0; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;
@@ -84,7 +79,6 @@
     .section-title { font-size: 24px; color: #007bff; margin-top: 40px; margin-bottom: 20px; font-weight: 600; }
     .content-block { margin-bottom: 25px; font-size: 16px; color: #333; line-height: 1.8; }
 
-    /* Botões Gerais */
     .actions-bottom { margin-top: 50px; display: flex; gap: 15px; justify-content: center; }
     .btn {
       padding: 12px 30px; border-radius: 25px; text-decoration: none;
@@ -97,7 +91,6 @@
     .btn-secondary:hover { background-color: #e0e0e0; }
     .btn-success { background-color: #28a745; color: white; cursor: default; }
 
-    /* --- LISTA DE CANDIDATOS --- */
     .candidates-list { margin-top: 50px; border-top: 2px solid #e0e0e0; padding-top: 30px; }
     
     .candidate-card {
@@ -117,7 +110,6 @@
 
     .candidate-card .btn { width: auto !important; flex-shrink: 0; white-space: nowrap; padding: 10px 25px; }
 
-    /* --- ESTILO DO MODAL --- */
     .ce-modal-overlay {
         position: fixed !important; top: 0; left: 0; right: 0; bottom: 0; 
         width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); 
@@ -127,7 +119,7 @@
     .ce-modal-overlay.open { display: flex !important; opacity: 1; }
 
     .ce-modal-content {
-        background: white; width: 90%; max-width: 800px; max-height: 90vh; /* Modal um pouco mais largo */
+        background: white; width: 90%; max-width: 800px; max-height: 90vh; 
         border-radius: 12px; padding: 0; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         display: flex; flex-direction: column; overflow: hidden; 
         transform: translateY(20px); transition: transform 0.3s ease;
@@ -143,11 +135,10 @@
     
     .ce-modal-body { padding: 30px; overflow-y: auto; }
     
-    /* Box de Informações do Estudante */
     .ce-info-box {
         background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px;
         padding: 20px; margin-bottom: 25px;
-        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; /* Grid de 2 colunas */
+        display: grid; grid-template-columns: 1fr 1fr; gap: 15px; 
     }
     .ce-info-item { font-size: 14px; color: #555; }
     .ce-info-item strong { color: #333; display: block; margin-bottom: 3px; font-weight: 600; }
@@ -174,7 +165,7 @@
       .candidate-card .btn { width: 100% !important; justify-content: center; }
       .ce-modal-footer { flex-direction: column; }
       .ce-modal-footer .btn { width: 100%; min-width: auto; }
-      .ce-info-box { grid-template-columns: 1fr; } /* Grid vira 1 coluna no mobile */
+      .ce-info-box { grid-template-columns: 1fr; }
     }
 </style>
 {% endblock %}
@@ -375,7 +366,6 @@
 </div>
 
 <script>
-    // 1. MENU DROPDOWN
     function toggleUserMenu() {
         const dropdown = document.getElementById('userDropdown');
         dropdown.classList.toggle('show');
@@ -390,13 +380,11 @@
         }
     }
 
-    // 2. MODAL LOGIC (Atualizado para novos campos)
     document.addEventListener('DOMContentLoaded', () => {
         const modal = document.getElementById('candidateModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const btns = document.querySelectorAll('.open-modal-btn');
 
-        // Referências aos elementos do modal
         const mName = document.getElementById('modalCandName');
         const mEmail = document.getElementById('modalCandEmail');
         const mPhone = document.getElementById('modalCandPhone');
@@ -409,7 +397,6 @@
 
         btns.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Pega dados do botão
                 const data = {
                     name: btn.getAttribute('data-name'),
                     email: btn.getAttribute('data-email'),
@@ -422,7 +409,6 @@
                     resumeUrl: btn.getAttribute('data-resume-url')
                 };
 
-                // Preenche o modal
                 mName.textContent = data.name;
                 mEmail.textContent = data.email;
                 mPhone.textContent = data.phone;
@@ -432,7 +418,6 @@
                 mSkills.textContent = data.skills || "Nenhuma informada";
                 mLetter.textContent = data.letter;
 
-                // Configura botão de currículo
                 if (data.resumeUrl) {
                     mResumeBtn.href = data.resumeUrl;
                     mResumeBtn.style.display = 'inline-flex';

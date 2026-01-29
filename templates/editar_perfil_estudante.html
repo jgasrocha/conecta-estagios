@@ -6,7 +6,6 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-    /* 1. Correção para o Navbar não descer */
     body {
         background-color: #f8f9fa !important;
         margin: 0 !important;
@@ -14,16 +13,13 @@
         font-family: 'Poppins', sans-serif;
     }
 
-    /* Esconde elementos padrão do base.html que atrapalham */
     .main-header, header.main-header { display: none !important; }
     
-    /* Zera o container padrão */
     .container, .container.main-container {
         max-width: 100% !important; width: 100% !important; padding: 0 !important; margin: 0 !important;
         background: transparent !important; box-shadow: none !important; display: block !important;
     }
 
-    /* --- HEADER NOVO --- */
     .custom-header {
       background: #007bff; color: white; padding: 15px 30px;
       display: flex; justify-content: space-between; align-items: center;
@@ -31,7 +27,6 @@
     }
     .custom-header nav a { color: white; margin-left: 25px; text-decoration: none; font-weight: 500; }
 
-    /* --- CONTEÚDO --- */
     .profile-container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
     .profile-card { background: #fff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; padding-bottom: 40px; }
     
@@ -40,7 +35,6 @@
       padding: 40px 20px; text-align: center; color: white; margin-bottom: 30px;
     }
 
-    /* --- ÁREA DA FOTO COM LÁPIS (NOVO) --- */
     .photo-edit-wrapper {
         position: relative; width: 130px; height: 130px; margin: 0 auto 15px auto;
     }
@@ -48,7 +42,6 @@
         width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
         border: 4px solid white; background: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    /* Botão de Lápis Flutuante */
     .photo-edit-btn {
         position: absolute; bottom: 5px; right: 5px;
         background-color: white; color: #007bff;
@@ -61,7 +54,6 @@
     .photo-edit-btn:hover { background-color: #f8f9fa; transform: scale(1.1); }
     .photo-edit-btn i { font-size: 18px; }
 
-    /* --- FORMULÁRIO --- */
     .edit-form { padding: 0 50px; }
     .section-label {
         color: #007bff; font-size: 18px; font-weight: 700; 
@@ -85,7 +77,6 @@
         border-color: #007bff; background: #fff; box-shadow: 0 0 0 4px #e7f3ff; outline: none;
     }
     
-    /* CURRÍCULO */
     .resume-upload-wrapper {
         border: 2px dashed #cbd5e1; border-radius: 12px; background-color: #f8fafc;
         position: relative; text-align: center; padding: 30px 20px;
@@ -99,7 +90,6 @@
         position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
     }
 
-    /* BOTÕES */
     .btn-group { display: flex; gap: 15px; margin-top: 40px; justify-content: center; }
     button[type="submit"] {
         background: #007bff; color: white; padding: 14px 40px; border: none;
@@ -253,7 +243,6 @@
 </main>
 
 <script>
-    // 1. Preview da FOTO
     const photoInput = document.getElementById('id_foto');
     const photoPreview = document.getElementById('photoPreview');
     const previewContainer = document.querySelector('.photo-preview');
@@ -264,7 +253,6 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // Se o preview atual for uma div (ícone), substitui por imagem
                     if (previewContainer.tagName === 'DIV') {
                         const newImg = document.createElement('img');
                         newImg.className = 'photo-preview';
@@ -272,7 +260,6 @@
                         newImg.src = e.target.result;
                         previewContainer.parentNode.replaceChild(newImg, previewContainer);
                     } else {
-                        // Se já for imagem, apenas troca o source
                         document.getElementById('photoPreview').src = e.target.result;
                     }
                 }
@@ -281,7 +268,6 @@
         });
     }
 
-    // 2. Preview do CURRÍCULO
     const fileInput = document.getElementById('id_curriculo');
     const fileNameSpan = document.getElementById('resumeFileName');
     const actionText = document.getElementById('resumeActionText');

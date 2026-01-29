@@ -5,7 +5,6 @@
 
 {% block extra_css %}
 <style>
-    /* --- CSS Específico da Página de Escolha --- */
     :root {
       --primary-blue: #007bff;
       --light-blue: #e7f3ff;
@@ -17,7 +16,6 @@
       --shadow-hover: rgba(0, 0, 0, 0.12);
     }
 
-    /* Sobrescreve o body do base.html para o fundo com imagem */
     body {
       font-family: 'Poppins', sans-serif;
       background-color: var(--light-blue) !important;
@@ -26,7 +24,6 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
-      /* Imagem de fundo */
       background-image: url('https://alcancejr.com.br/wp-content/uploads/2020/03/mesa-1024x683.jpg'); 
       background-size: cover;
       background-position: center;
@@ -35,7 +32,6 @@
       position: relative;
     }
 
-    /* Overlay escuro */
     body::before {
       content: '';
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -43,10 +39,8 @@
       z-index: -1;
     }
 
-    /* Esconde o Header padrão do Base.html */
     .main-header { display: none !important; }
 
-    /* Reseta o container padrão do Base.html */
     .container.main-container {
         background: transparent !important;
         box-shadow: none !important;
@@ -58,7 +52,6 @@
         justify-content: center;
     }
 
-    /* --- Estilo do Card de Escolha --- */
     .choice-card {
       background-color: #fff;
       padding: 45px 55px;
@@ -83,13 +76,11 @@
       letter-spacing: -0.5px;
     }
 
-    /* Estilização dos Links que envolvem os botões */
     .choice-buttons a {
         text-decoration: none;
-        display: block; /* Garante que o link ocupe a linha */
+        display: block; 
     }
 
-    /* Botões */
     .btn-choice {
       width: 100%;
       padding: 16px 0;
@@ -116,7 +107,6 @@
       box-shadow: 0 4px 15px rgba(0, 123, 255, 0.25);
     }
 
-    /* Responsividade */
     @media (max-width: 500px) {
       .choice-card {
         width: 90%;

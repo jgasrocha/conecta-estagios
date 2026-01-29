@@ -11,10 +11,9 @@ class Vaga(models.Model):
         ('hibrido', 'Híbrido'),
     ]
 
-    # Novos status para a gestão
     STATUS_CHOICES = [
         ('ativa', 'Ativa'),
-        ('analise', 'Em Análise'), # Prazo acabou ou empresa colocou manualmente
+        ('analise', 'Em Análise'), 
         ('finalizada', 'Finalizada/Preenchida'),
     ]
 
@@ -32,7 +31,6 @@ class Vaga(models.Model):
     prazo_candidatura = models.DateField()
     data_publicacao = models.DateTimeField(auto_now_add=True)
     
-    # Substituímos o booleano 'ativa' por 'status' para ter mais controle
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ativa')
 
     def __str__(self):
@@ -40,7 +38,6 @@ class Vaga(models.Model):
 
     @property
     def is_ativa(self):
-        # Verifica se o prazo venceu automaticamente
         if self.status == 'ativa' and self.prazo_candidatura < date.today():
             self.status = 'analise'
             self.save()

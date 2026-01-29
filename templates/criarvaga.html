@@ -16,8 +16,6 @@
 
 <style>
 
-    /* --- CONFIGURAÇÃO DO LAYOUT --- */
-
     :root {
 
       --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
@@ -28,15 +26,9 @@
 
     }
 
-
-
     body { background-color: var(--bg-gray-light) !important; margin: 0 !important; font-family: 'Poppins', sans-serif; }
 
     .main-header { display: none !important; }
-
-
-
-    /* Reset Container */
 
     .container.main-container {
 
@@ -45,10 +37,6 @@
         background: transparent !important; box-shadow: none !important; display: block !important;
 
     }
-
-
-
-    /* --- HEADER CUSTOMIZADO (Igual ao Feed Empresa) --- */
 
     .custom-header {
 
@@ -62,10 +50,6 @@
 
     .custom-header .logo { font-size: 24px; font-weight: 700; }
 
-   
-
-    /* Nav Links */
-
     .nav-links { display: flex; align-items: center; margin-left: auto; margin-right: 30px; }
 
     .nav-links a {
@@ -76,13 +60,7 @@
 
     .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
 
-
-
-    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
-
     .user-menu-container { position: relative; }
-
-
 
     .user-trigger {
 
@@ -94,8 +72,6 @@
 
     .user-trigger:hover { background-color: rgba(255,255,255,0.1); }
 
-
-
     .nav-profile-pic {
 
         width: 35px; height: 35px; border-radius: 50%; object-fit: cover;
@@ -103,8 +79,6 @@
         border: 2px solid white; background-color: #fff;
 
     }
-
-   
 
     .user-dropdown {
 
@@ -120,8 +94,6 @@
 
     .user-dropdown.show { display: flex; }
 
-
-
     .user-dropdown a {
 
         padding: 12px 20px; text-decoration: none; color: var(--text-dark);
@@ -134,15 +106,9 @@
 
     .user-dropdown a i { width: 18px; text-align: center; }
 
-   
-
     .divider { height: 1px; background-color: #eee; margin: 0; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-
-
-    /* --- MAIN CONTAINER (FORMULÁRIO) --- */
 
     .create-vacancy-container {
 
@@ -154,8 +120,6 @@
 
     }
 
-
-
     h1 {
 
       color: var(--primary-blue); font-weight: 700; font-size: 32px;
@@ -164,13 +128,9 @@
 
     }
 
-
-
     .form-group { margin-bottom: 20px; }
 
     label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-dark); font-size: 16px; }
-
-
 
     input[type="text"], input[type="number"], input[type="date"], textarea, select {
 
@@ -190,8 +150,6 @@
 
     textarea { resize: vertical; min-height: 100px; }
 
-
-
     button[type="submit"] {
 
       width: 100%; background: var(--primary-blue); color: white; border: none;
@@ -206,8 +164,6 @@
 
     button[type="submit"]:hover { background: var(--dark-blue); transform: translateY(-2px); }
 
-
-
     .button-group { display: flex; gap: 15px; margin-top: 25px; }
 
     .btn-cancel {
@@ -221,8 +177,6 @@
     }
 
     .btn-cancel:hover { background-color: #5a6268; }
-
-
 
     @media (max-width: 768px) {
 
@@ -450,7 +404,6 @@
 
 <script>
 
-  // 1. Script do Menu Dropdown
 
   function toggleUserMenu() {
 
@@ -480,7 +433,6 @@
 
 
 
-  // 2. Lógica para esconder/mostrar campo de localização
 
   const modalidadeSelect = document.getElementById('id_modalidade');
 

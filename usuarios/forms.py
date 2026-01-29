@@ -2,11 +2,9 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import PerfilEstudante, PerfilEmpresa
 
-# Formulário para criar o Usuário básico
 class UserRegistrationForm(forms.ModelForm):
-    # Definindo label manualmente para garantir tradução
     username = forms.CharField(label="Usuário")
-    email = forms.EmailField(label="E-mail")  # <--- AQUI A CORREÇÃO
+    email = forms.EmailField(label="E-mail")
     
     senha = forms.CharField(
         label="Senha", 
@@ -19,8 +17,6 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        # Removemos 'password' para não duplicar e mantemos username e email
-        # O label definido acima sobrescreve o padrão do model
         fields = ['username', 'email'] 
 
     def clean(self):
@@ -40,7 +36,6 @@ class UserRegistrationForm(forms.ModelForm):
             user.save()
         return user
 
-# ... restante dos formulários (EstudanteProfileForm, EmpresaProfileForm, etc.) permanece igual ...
 class EstudanteProfileForm(forms.ModelForm):
     class Meta:
         model = PerfilEstudante
@@ -60,7 +55,7 @@ class EmpresaProfileForm(forms.ModelForm):
         }
 
 class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField(label="E-mail") # Garante no update também
+    email = forms.EmailField(label="E-mail") 
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email']

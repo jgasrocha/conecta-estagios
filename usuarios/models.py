@@ -17,7 +17,7 @@ class PerfilEstudante(models.Model):
 
 class PerfilEmpresa(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil_empresa')
-    nome_empresa = models.CharField(max_length=100) # Nome fantasia
+    nome_empresa = models.CharField(max_length=100)
     cnpj = models.CharField(max_length=20, unique=True)
     telefone = models.CharField(max_length=20)
     descricao = models.TextField(blank=True, verbose_name="Sobre a Empresa")

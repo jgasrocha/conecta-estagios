@@ -10,7 +10,6 @@
 />
 
 <style>
-  /* --- CONFIGURAÇÃO DO LAYOUT --- */
   :root {
     --primary-blue: #007bff;
     --light-blue: #e7f3ff;
@@ -37,7 +36,6 @@
     font-family: "Poppins", sans-serif;
   }
 
-  /* --- HEADER CUSTOMIZADO (FIXO) --- */
   .custom-header {
     background: var(--primary-blue);
     color: white;
@@ -58,7 +56,6 @@
   }
   .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
 
-  /* --- MENU DO USUÁRIO --- */
   .user-menu-container { position: relative; }
 
   .user-trigger {
@@ -91,19 +88,16 @@
   .divider { height: 1px; background-color: #eee; margin: 0; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* --- CONTEÚDO PRINCIPAL --- */
   .dashboard-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
 
   h1 { color: var(--primary-blue); font-weight: 700; font-size: 32px; margin-bottom: 5px; }
   .welcome { margin-bottom: 30px; font-size: 16px; color: var(--text-medium); }
 
-  /* --- BARRA DE FERRAMENTAS --- */
   .tools-section {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 30px; flex-wrap: wrap; gap: 15px;
   }
 
-  /* --- SEARCH BOX (Estilo do Estudante) --- */
   .search-box {
     display: flex; gap: 10px; background: white; padding: 20px;
     border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-light);
@@ -125,7 +119,6 @@
   }
   .search-box button:hover { background-color: var(--dark-blue); }
 
-  /* Filtros ao lado da barra */
   .filters { display: flex; align-items: center; }
   .filters select {
     padding: 12px 20px; border: 1px solid var(--border-light); border-radius: 12px;
@@ -133,7 +126,6 @@
     box-shadow: 0 5px 15px var(--shadow-light); outline: none;
   }
 
-  /* --- CARDS DE VAGAS --- */
   .job-listings { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
 
   .job-card {
@@ -146,13 +138,11 @@
   .job-card p { color: var(--text-medium); font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
   .job-card p i { width: 16px; color: var(--primary-blue); }
 
-  /* Badges */
   .status-badge { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 10px; align-self: flex-start; }
   .status-badge.active { background-color: #e6ffed; color: #28a745; }
   .status-badge.inactive { background-color: #fff3cd; color: #856404; }
   .status-badge.closed { background-color: #f8d7da; color: #721c24; }
 
-  /* Ações */
   .card-actions { margin-top: 20px; display: flex; gap: 10px; }
   .btn-card { padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 14px; font-weight: 500; flex: 1; text-align: center; transition: 0.3s; }
   .btn-primary-card { background-color: var(--primary-blue); color: white; }
@@ -162,7 +152,6 @@
 
   .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 5px 20px var(--shadow-light); display: none; }
 
-  /* FAB */
   .fab-button {
     position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
     background-color: var(--primary-blue); color: white; border-radius: 50%;

@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-    /* --- 1. RESET E LAYOUT (Igual às outras páginas) --- */
     :root {
       --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
       --text-dark: #333; --text-medium: #555; --bg-gray-light: #f8f9fa;
@@ -21,7 +20,6 @@
         background: transparent !important; box-shadow: none !important; display: block !important;
     }
 
-    /* --- 2. HEADER CUSTOMIZADO (Igual ao Feed Estudante) --- */
     .custom-header {
       background: var(--primary-blue); color: white; padding: 10px 30px;
       display: flex; justify-content: space-between; align-items: center;
@@ -35,7 +33,6 @@
     }
     .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
 
-    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
     .user-menu-container { position: relative; }
 
     .user-trigger {
@@ -67,7 +64,6 @@
     .divider { height: 1px; background-color: #eee; margin: 0; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- 3. CONTEÚDO DO HISTÓRICO --- */
     .history-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
     h1 { color: var(--primary-blue); margin-bottom: 30px; font-weight: 700; }
 
@@ -83,13 +79,11 @@
     .vaga-info p { margin: 0 0 5px 0; color: var(--text-medium); font-size: 15px; display: flex; align-items: center; gap: 8px; }
     .vaga-info i { color: var(--primary-blue); width: 20px; text-align: center; }
     
-    /* Badges */
     .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; display: inline-block; }
     .st-ativa { background: #e6ffed; color: #28a745; }
     .st-analise { background: #fff3cd; color: #856404; }
     .st-finalizada { background: #f8d7da; color: #721c24; }
 
-    /* Botão Ver Vaga */
     .btn-view {
         background-color: var(--primary-blue); color: white; padding: 10px 25px;
         border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 14px;

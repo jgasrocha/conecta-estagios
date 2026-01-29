@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
-    /* --- CONFIGURAÇÃO DO LAYOUT --- */
     :root {
       --primary-blue: #007bff; --light-blue: #e7f3ff; --dark-blue: #0056b3;
       --text-dark: #333; --text-medium: #555; --border-light: #e0e0e0;
@@ -22,7 +21,6 @@
     .main-header { display: none !important; }
     body { background-color: var(--bg-gray-light) !important; margin: 0 !important; font-family: 'Poppins', sans-serif; }
 
-    /* --- HEADER CUSTOMIZADO --- */
     .custom-header {
       background: var(--primary-blue); color: white; padding: 10px 30px;
       display: flex; justify-content: space-between; align-items: center;
@@ -36,7 +34,6 @@
     }
     .nav-links a:hover { color: var(--light-blue); text-decoration: underline; }
 
-    /* --- MENU DO USUÁRIO (DROPDOWN) --- */
     .user-menu-container { position: relative; }
 
     .user-trigger {
@@ -68,17 +65,14 @@
     .divider { height: 1px; background-color: #eee; margin: 0; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* --- FEED CONTENT --- */
     .feed-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
     h1 { color: var(--primary-blue); font-weight: 700; text-align: center; margin-bottom: 30px; }
 
-    /* Search Box */
     .search-box { display: flex; gap: 10px; margin-bottom: 40px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px var(--shadow-light); }
     .search-box input { flex: 1; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-light); font-size: 16px; font-family: 'Poppins', sans-serif; }
     .search-box button { width: auto; padding: 0 30px; background-color: var(--primary-blue); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
     .search-box button:hover { background-color: var(--dark-blue); }
 
-    /* Cards */
     .job-listings { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
     .job-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 5px 20px var(--shadow-light); transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
     .job-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.12); }
